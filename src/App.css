@@ -1,0 +1,18 @@
+@keyframes hoverAnimation {
+    0% {
+      background-position: 100% 0;
+    }
+    100% {
+      background-position: 0 0;
+    }
+  }
+  
+  .hover-bg {
+    background: linear-gradient(90deg, #CBACF9, #393BB2);
+    background-size: 200% 200%;
+    transition: background-position 0.5s ease;
+  }
+  
+  .hover-bg:hover {
+    animation: hoverAnimation 0.5s forwards;
+  }
