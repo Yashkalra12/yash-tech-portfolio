@@ -44,7 +44,7 @@ const Projects = () => {
     {
       image: "healthsync.png",
       title: "HealthSync",
-      desc: "Welcome to our comprehensive healthcare platform! Our website offers a seamless experience for users and doctors alike. Sign up or log in to unlock a range of features. Easily browse through a list of available doctors, manage your profile, and submit queries effortlessly.",
+      desc: "HealthSync offers a seamless experience for users and doctors alike. Sign up or log in to unlock a range of features. Easily browse through a list of available doctors, manage your profile, and submit queries effortlessly.",
       link: "https://health-sync-rose.vercel.app/",
       github: "https://github.com/Yashkalra12/HealthSync",
       skills: [{title:"React",img:"react.png"},{title:"Redux",img:"redux.png"},{title:"Tailwind CSS",img:"tailwind.svg"},{title:"JavaScript",img:"js.png"},{title:"Node.js",img:"node.png"},{title:"Express.js",img:"express.jpg"},{title:"MongoDB",img:"mongo.png"}],
