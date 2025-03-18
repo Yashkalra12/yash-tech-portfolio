@@ -111,6 +111,7 @@ const Skills = () => {
     { img: "reactquery.png", title: "React Query" },
     { img: "redux.png", title: "Redux" },
     { img: "zustand.svg", title: "Zustand" },
+    { img: "Typescript.png", title: "TypeScript" },
     { img: "node.png", title: "Node.js" },
     { img: "express.jpg", title: "Express.js" },
     { img: "mongo.png", title: "MongoDB" },

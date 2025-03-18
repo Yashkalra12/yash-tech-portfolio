@@ -62,7 +62,7 @@ const Home = () => {
           </div>
 
           <div ref={heroTextRef[0]} className="flex gap-3 md:gap-10 justify-center mx-auto">
-            <a href="https://drive.google.com/file/d/1Cp17ZH-YjggWjx9UDNkvMKYqoQOpwdZ1/view?usp=drive_link" target="_blank" className="md:w-44">
+            <a href="https://drive.google.com/file/d/1xurERMv5qe7o54uPjougjTSEg4dmQ5hW/view?usp=sharing" target="_blank" className="md:w-44">
             <MagicButton
               title="Resume"
               icon={<FiDownloadCloud size={20} />}
@@ -84,7 +84,7 @@ const Home = () => {
         </ParallaxBG>
       </div>
       <AboutMe sectionRef={aboutMeRef} />
-      {/* <Experience /> */}
+      <Experience />
       <Projects />
       <Skills />
       <Education />

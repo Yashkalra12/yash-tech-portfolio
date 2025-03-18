@@ -5,7 +5,7 @@ const Navbar = () => {
   const sections = [
     { id: 'home', icon: <FaHome />, text: 'Home' },
     { id: 'about', icon: <FaUser />, text: 'About' },
-    // { id: 'experience', icon: <FaBriefcase />, text: 'Experience' },
+    { id: 'experience', icon: <FaBriefcase />, text: 'Experience' },
     { id: 'projects', icon: <FaProjectDiagram />, text: 'Projects' },
     { id: 'skills', icon: <FaCode />, text: 'Skills' },
     { id: 'education', icon: <FaGraduationCap />, text: 'Education' },

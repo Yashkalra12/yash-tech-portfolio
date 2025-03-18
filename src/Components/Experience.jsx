@@ -33,46 +33,46 @@ const Experience = () => {
   const experienceData = [
     {
       id: 1,
-      companyName: "Salescode.ai",
-      shortName: "Salescode.ai",
-      role: "Software Engineer Trainee",
-      duration: "24 September 2024 - Present",
-      image: "assets/sc logo.svg",
+      companyName: "Munshot PTE Ltd",
+      shortName: "Munshot",
+      role: "Full Stack Developer",
+      duration: "Nov 2024 - Present",
+      image: "assets/munsgot_logo.png",
       responsibilities: [
-       "SalesCode.ai utilizes AI-driven RTM solutions to transform CPG sales processes and guarantee sales growth.",
-        "The platform collaborates with over 65 leading CPG brands in 18 countries, backed by a team of 170+ experts.",
-        "With over 3 million users and more than 1 billion transactions processed, SalesCode.ai delivers significant results in CPG sales",
+        "Engineered an AI-based stock market analyzer application, focusing on developing and testing essential APIs to ensure functionality and performance.",
+
+        "Implemented an Analysts Agents screen, integrating 10+ APIs from scratch in the frontend handling the complete process from design to functionality."
       ],
-      certificateLink: "https://salescode.ai/",
+      certificateLink: "https://www.muns.io/",
     },
-    {
-      id: 2,
-      companyName: "Xeta Analytics Private Limited",
-      shortName: "Xeta Analytics Pvt. Ltd.",
-      role: "Frontend Web Development Intern",
-      duration: "4 March 2024 - 31 July 2024",
-      image: "assets/xeta.png",
-      responsibilities: [
-        "Developed CRM & CMS for DietSnap, enabling seamless user interaction and diet assignment by nutritionists.",
-        "Enhanced DietSnap’s data visualization with MUI and Apex Charts for easy analysis.",
-        "Led frontend development and API integration for FitSnap’s AI-powered workout feedback app.",
-        "Deployed FitSnap on AWS EC2, ensuring reliable and accessible service.",
-      ],
-      certificateLink: "https://drive.google.com/file/d/15vY3AFnDyue5x_EcpxoM6jeierFvRulS/view?usp=sharing", 
-    },
-    {
-      id: 3,
-      companyName: "IEEE MSIT",
-      shortName: "IEEE MSIT",
-      role: "Video Editing Chairperson, Design Committee",
-      duration: "December 2022 - January 2024",
-      image: "assets/ieee.png",
-      responsibilities: [
-        "Led a team of 14 designers to produce captivating posters and videos for IEEE MSIT, leading to a 40% boost in social media engagement.",
-        "Responsible for mentoring team members, equipping them with the skills to proficiently utilize Adobe Illustrator and Adobe Premier Pro.",
-      ],
-      certificateLink: "https://drive.google.com/file/d/1iXmTQMg_KL0a-tbIH8eUGsb-QyFF-kqu/view?usp=sharing", 
-    },
+    // {
+    //   id: 2,
+    //   companyName: "Xeta Analytics Private Limited",
+    //   shortName: "Xeta Analytics Pvt. Ltd.",
+    //   role: "Frontend Web Development Intern",
+    //   duration: "4 March 2024 - 31 July 2024",
+    //   image: "assets/xeta.png",
+    //   responsibilities: [
+    //     "Developed CRM & CMS for DietSnap, enabling seamless user interaction and diet assignment by nutritionists.",
+    //     "Enhanced DietSnap’s data visualization with MUI and Apex Charts for easy analysis.",
+    //     "Led frontend development and API integration for FitSnap’s AI-powered workout feedback app.",
+    //     "Deployed FitSnap on AWS EC2, ensuring reliable and accessible service.",
+    //   ],
+    //   certificateLink: "https://drive.google.com/file/d/15vY3AFnDyue5x_EcpxoM6jeierFvRulS/view?usp=sharing", 
+    // },
+    // {
+    //   id: 3,
+    //   companyName: "IEEE MSIT",
+    //   shortName: "IEEE MSIT",
+    //   role: "Video Editing Chairperson, Design Committee",
+    //   duration: "December 2022 - January 2024",
+    //   image: "assets/ieee.png",
+    //   responsibilities: [
+    //     "Led a team of 14 designers to produce captivating posters and videos for IEEE MSIT, leading to a 40% boost in social media engagement.",
+    //     "Responsible for mentoring team members, equipping them with the skills to proficiently utilize Adobe Illustrator and Adobe Premier Pro.",
+    //   ],
+    //   certificateLink: "https://drive.google.com/file/d/1iXmTQMg_KL0a-tbIH8eUGsb-QyFF-kqu/view?usp=sharing", 
+    // },
   ];
 
   return (
@@ -86,18 +86,16 @@ const Experience = () => {
 
       {experienceData.map((experience) => (
         <div className="mt-5 md:mt-10" data-aos="fade-up" key={experience.id}>
-          <Tilt  options={{ max: 10,scale:1}} className="flex flex-col md:flex-row gap-10 p-3 bg-gradient-to-br from-[#010320] to-[#111325] rounded-xl border border-gray-600">
+          <Tilt options={{ max: 10, scale: 1 }} className="flex flex-col md:flex-row gap-10 p-3 bg-gradient-to-br from-[#010320] to-[#111325] rounded-xl border border-gray-600">
             {experience.id === 1 && (
-              <video
-                src="assets/sclogo.mp4"
-                autoPlay
-                loop
-                muted
-                className="w-96 z-50"
-              />
+              <img
+              src={experience.image}
+              alt={experience.companyName}
+              className="rounded-lg w-96 object-scale-down"
+            />
             )}
 
-           {experience.id!=1 &&  <img
+            {experience.id != 1 && <img
               src={experience.image}
               alt={experience.companyName}
               className="rounded-lg w-96 object-scale-down"
@@ -124,7 +122,7 @@ const Experience = () => {
               <div className="flex justify-center md:justify-between gap-5 my-5">
                 <Link to={experience.certificateLink} target="_blank">
                   <MagicButton
-                    title={experience.id==1 ? "Website" : "Certificate"}
+                    title={experience.id == 1 ? "Website" : "Certificate"}
                     w={40}
                     icon={<FaLocationArrow />}
                     position="right"
