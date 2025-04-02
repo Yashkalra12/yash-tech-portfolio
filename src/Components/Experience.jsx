@@ -36,14 +36,16 @@ const Experience = () => {
       companyName: "Munshot PTE Ltd",
       shortName: "Munshot",
       role: "Full Stack Developer",
-      duration: "Nov 2024 - Present",
+      duration: "Jan 2025 - Present",
       image: "assets/munsgot_logo.png",
       responsibilities: [
         "Engineered an AI-based stock market analyzer application, focusing on developing and testing essential APIs to ensure functionality and performance.",
 
-        "Implemented an Analysts Agents screen, integrating 10+ APIs from scratch in the frontend handling the complete process from design to functionality."
+        "Implemented an Analysts Agents screen, integrating 10+ APIs from scratch in the frontend handling the complete process from design to functionality.",
+
+        "Built a Stocks Portfolio panel from scratch, integrating it with existing screens, implementing toggle functionality, and enabling stock listing by fetching data from the Redux store."
       ],
-      certificateLink: "https://www.muns.io/",
+      certificateLink: "https://www.linkedin.com/company/munshot/about/",
     },
     // {
     //   id: 2,
