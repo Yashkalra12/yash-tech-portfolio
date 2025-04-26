@@ -107,16 +107,17 @@ const Skills = () => {
     { img: "css.png", title: "CSS" },
     { img: "tailwind.svg", title: "Tailwind CSS" },
     { img: "js.png", title: "JavaScript" },
+    { img: "python.png", title: "Pyhton" },
     { img: "react.png", title: "React" },
+    { img: "django.png", title: "Django" },
     { img: "reactquery.png", title: "React Query" },
     { img: "redux.png", title: "Redux" },
-    { img: "zustand.svg", title: "Zustand" },
     { img: "Typescript.png", title: "TypeScript" },
     { img: "node.png", title: "Node.js" },
     { img: "express.jpg", title: "Express.js" },
     { img: "mongo.png", title: "MongoDB" },
     { img: "git.png", title: "Git" },
-    { img: "github.png", title: "GitHub" },
+    { img: "github.png", title: "GitHub" }, 
   ];
 
   return (
