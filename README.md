@@ -1,7 +1,3 @@
-Sure! Here's a cleaner, professional version of the `README.md` file without the unnecessary emojis while still keeping it engaging and informative:
-
----
-
 ````markdown
 # yash-tech-portfolio  
 **Personal Developer Portfolio | [yashkalra.site](https://yashkalra.site)**  
