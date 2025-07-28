@@ -71,7 +71,7 @@ const Education = () => {
       img: "assets/CUIETlogo.png",
       school: "Chitkara University Institute of Engineering and Technology, Punjab",
       date: "Oct 2021 - Jul 2025",
-      grade: " 9.22 CGPA",
+      grade: " 9.26 CGPA",
       desc: "I am currently pursuing a Bachelor's degree in Computer Science and Engineering at Chitkara University, Punjab. I have completed 7 semesters and have a CGPA of 9.22. I have taken courses in Data Structures, Algorithms, Object-Oriented Programming, Database Management Systems, Operating Systems, and Computer Networks, among others..",
       degree: "B.E. Computer Science and Engineering",
     },

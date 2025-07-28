@@ -62,7 +62,7 @@ const Home = () => {
           </div>
 
           <div ref={heroTextRef[0]} className="flex gap-3 md:gap-10 justify-center mx-auto">
-            <a href="https://drive.google.com/file/d/1xurERMv5qe7o54uPjougjTSEg4dmQ5hW/view?usp=sharing" target="_blank" className="md:w-44">
+            <a href="https://drive.google.com/file/d/1g3U6-B-HrgpVUbu3Hy_O0YumXkDR3ZTr/view?usp=sharing" target="_blank" className="md:w-44">
             <MagicButton
               title="Resume"
               icon={<FiDownloadCloud size={20} />}
