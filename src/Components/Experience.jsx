@@ -80,11 +80,11 @@ const Experience = () => {
       {experienceData.map((experience) => (
         <div className="mt-5 md:mt-10" data-aos="fade-up" key={experience.id}>
           <Tilt options={{ max: 10, scale: 1 }} className="flex flex-col md:flex-row gap-10 p-3 bg-gradient-to-br from-[#010320] to-[#111325] rounded-xl border border-gray-600">
-            <div className="flex-shrink-0 w-96 h-48 flex items-center justify-center rounded-lg">
+            <div className="flex-shrink-0 w-full max-w-xs md:w-96 h-40 md:h-48 flex items-center justify-center rounded-lg mx-auto">
               <img
                 src={experience.image}
                 alt={experience.companyName}
-                className="rounded-lg max-w-full max-h-full object-contain transform translate-y-[40%]"
+                className="rounded-lg w-full h-auto max-h-40 md:max-h-48 object-contain transform translate-y-[40%]"
               />
             </div>
             <div>
