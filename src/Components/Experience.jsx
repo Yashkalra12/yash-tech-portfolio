@@ -33,26 +33,10 @@ const Experience = () => {
   const experienceData = [
     {
       id: 1,
-      companyName: "Munshot PTE Ltd",
-      shortName: "Munshot",
-      role: "Full Stack Developer",
-      duration: "Jan 2025 - Present",
-      image: "assets/munsgot_logo.png",
-      responsibilities: [
-        "Engineered an AI-based stock market analyzer application, focusing on developing and testing essential APIs to ensure functionality and performance.",
-
-        "Implemented an Analysts Agents screen, integrating 10+ APIs from scratch in the frontend handling the complete process from design to functionality.",
-
-        "Built a Stocks Portfolio panel from scratch, integrating it with existing screens, implementing toggle functionality, and enabling stock listing by fetching data from the Redux store."
-      ],
-      certificateLink: "https://www.linkedin.com/company/munshot/about/",
-    },
-    {
-      id: 2,
       companyName: "Lumio AI",
       shortName: "Lumio AI",
       role: "SWE",
-      duration: "4 Feb 2025 - 31 July 2025",
+      duration: "Feb 2025 - July 2025",
       image: "assets/LumioAi.png",
       responsibilities: [
         "Built and deployed 5+ projects from scratch using React, Angular, Next.js, and FastAPI.",
@@ -65,19 +49,23 @@ const Experience = () => {
       ],
       certificateLink: "https://www.teamlumio.ai/", 
     },
-    // {
-    //   id: 3,
-    //   companyName: "IEEE MSIT",
-    //   shortName: "IEEE MSIT",
-    //   role: "Video Editing Chairperson, Design Committee",
-    //   duration: "December 2022 - January 2024",
-    //   image: "assets/ieee.png",
-    //   responsibilities: [
-    //     "Led a team of 14 designers to produce captivating posters and videos for IEEE MSIT, leading to a 40% boost in social media engagement.",
-    //     "Responsible for mentoring team members, equipping them with the skills to proficiently utilize Adobe Illustrator and Adobe Premier Pro.",
-    //   ],
-    //   certificateLink: "https://drive.google.com/file/d/1iXmTQMg_KL0a-tbIH8eUGsb-QyFF-kqu/view?usp=sharing", 
-    // },
+    {
+      id: 2,
+      companyName: "Munshot PTE Ltd",
+      shortName: "Munshot",
+      role: "Full Stack Developer",
+      duration: "Sep 2024 - Jan 2025",
+      image: "assets/munsgot_logo.png",
+      responsibilities: [
+        "Engineered an AI-based stock market analyzer application, focusing on developing and testing essential APIs to ensure functionality and performance.",
+
+        "Implemented an Analysts Agents screen, integrating 10+ APIs from scratch in the frontend handling the complete process from design to functionality.",
+
+        "Built a Stocks Portfolio panel from scratch, integrating it with existing screens, implementing toggle functionality, and enabling stock listing by fetching data from the Redux store."
+      ],
+      certificateLink: "https://www.linkedin.com/company/munshot/about/",
+    },
+    
   ];
 
   return (
@@ -92,19 +80,13 @@ const Experience = () => {
       {experienceData.map((experience) => (
         <div className="mt-5 md:mt-10" data-aos="fade-up" key={experience.id}>
           <Tilt options={{ max: 10, scale: 1 }} className="flex flex-col md:flex-row gap-10 p-3 bg-gradient-to-br from-[#010320] to-[#111325] rounded-xl border border-gray-600">
-            {experience.id === 1 && (
+            <div className="flex-shrink-0 w-96 h-48 flex items-center justify-center rounded-lg">
               <img
-              src={experience.image}
-              alt={experience.companyName}
-              className="rounded-lg w-96 object-scale-down"
-            />
-            )}
-
-            {experience.id != 1 && <img
-              src={experience.image}
-              alt={experience.companyName}
-              className="rounded-lg w-96 object-scale-down"
-            />}
+                src={experience.image}
+                alt={experience.companyName}
+                className="rounded-lg max-w-full max-h-full object-contain transform translate-y-[40%]"
+              />
+            </div>
             <div>
               <p className="text-2xl md:text-3xl font-bold hidden md:block">
                 {experience.companyName}

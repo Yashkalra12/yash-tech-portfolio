@@ -62,7 +62,7 @@ const Home = () => {
           </div>
 
           <div ref={heroTextRef[0]} className="flex gap-3 md:gap-10 justify-center mx-auto">
-            <a href="https://drive.google.com/file/d/1xurERMv5qe7o54uPjougjTSEg4dmQ5hW/view?usp=sharing" target="_blank" className="md:w-44">
+            <a href="https://drive.google.com/file/d/1g3U6-B-HrgpVUbu3Hy_O0YumXkDR3ZTr/view?usp=sharing" target="_blank" className="md:w-44">
             <MagicButton
               title="Resume"
               icon={<FiDownloadCloud size={20} />}
@@ -89,9 +89,12 @@ const Home = () => {
       <Skills />
       <Education />
       <Socials />
-      <div className="h-48">
+      <div className="h-28">
 
       </div>
+      <footer className="text-center py-8 text-gray-400">
+        <p>Copyright © 2025 Yash Kalra</p>
+      </footer>
       <img
         src="assets/grid-pattern.png"
         className="absolute top-0 mx-auto w-full "
