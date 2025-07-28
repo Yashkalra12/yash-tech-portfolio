@@ -89,9 +89,12 @@ const Home = () => {
       <Skills />
       <Education />
       <Socials />
-      <div className="h-48">
+      <div className="h-28">
 
       </div>
+      <footer className="text-center py-8 text-gray-400">
+        <p>Copyright © 2025 Yash Kalra</p>
+      </footer>
       <img
         src="assets/grid-pattern.png"
         className="absolute top-0 mx-auto w-full "
