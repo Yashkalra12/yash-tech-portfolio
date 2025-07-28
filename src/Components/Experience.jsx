@@ -47,21 +47,24 @@ const Experience = () => {
       ],
       certificateLink: "https://www.linkedin.com/company/munshot/about/",
     },
-    // {
-    //   id: 2,
-    //   companyName: "Xeta Analytics Private Limited",
-    //   shortName: "Xeta Analytics Pvt. Ltd.",
-    //   role: "Frontend Web Development Intern",
-    //   duration: "4 March 2024 - 31 July 2024",
-    //   image: "assets/xeta.png",
-    //   responsibilities: [
-    //     "Developed CRM & CMS for DietSnap, enabling seamless user interaction and diet assignment by nutritionists.",
-    //     "Enhanced DietSnap’s data visualization with MUI and Apex Charts for easy analysis.",
-    //     "Led frontend development and API integration for FitSnap’s AI-powered workout feedback app.",
-    //     "Deployed FitSnap on AWS EC2, ensuring reliable and accessible service.",
-    //   ],
-    //   certificateLink: "https://drive.google.com/file/d/15vY3AFnDyue5x_EcpxoM6jeierFvRulS/view?usp=sharing", 
-    // },
+    {
+      id: 2,
+      companyName: "Lumio AI",
+      shortName: "Lumio AI",
+      role: "SWE",
+      duration: "4 Feb 2025 - 31 July 2025",
+      image: "assets/LumioAi.png",
+      responsibilities: [
+        "Built and deployed 5+ projects from scratch using React, Angular, Next.js, and FastAPI.",
+
+        "Integrated AI APIs and built frontend UIs for apps used by US-based clients.",
+
+        "Converted desktop software into web apps using Three.js and tested features using Pytest.",
+
+        "Developed a flagging system in a monorepo to validate data from thousands of PDFs against ground truth JSON, improving accuracy by 80%."
+      ],
+      certificateLink: "https://www.teamlumio.ai/", 
+    },
     // {
     //   id: 3,
     //   companyName: "IEEE MSIT",
@@ -124,7 +127,7 @@ const Experience = () => {
               <div className="flex justify-center md:justify-between gap-5 my-5">
                 <Link to={experience.certificateLink} target="_blank">
                   <MagicButton
-                    title={experience.id == 1 ? "Website" : "Certificate"}
+                    title="Website"
                     w={40}
                     icon={<FaLocationArrow />}
                     position="right"
