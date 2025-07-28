@@ -1,8 +1,8 @@
 import React from 'react';
 
-const PortfolioGrid = () => {
+const PortfolioGrid = ({ sectionRef }) => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#010320] to-[#111325] p-4 md:p-8 flex items-center justify-center">
+    <div ref={sectionRef} className="min-h-screen bg-gradient-to-br from-[#010320] to-[#111325] p-4 md:p-8 flex items-center justify-center mt-[10%]" id="about">
       <div
         className="max-w-7xl mx-auto w-full rounded-3xl p-4 md:p-8"
         style={{ perspective: '1200px' }}
