@@ -1,234 +1,153 @@
-import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import ScrollIndicator from "./utils/ScrollIndicator";
-import useIntersectionObserver from "../Hooks/UseInterSectionObsever";
+import React from 'react';
 
-gsap.registerPlugin(ScrollTrigger);
-
-export default function AboutMe({ sectionRef }) {
-  const aboutme = "ABOUT ME ABOUT ME ABOUT ME ABOUT ME ABOUT ME";
-  const name = "YASH KALRA YASH KALRA YASH KALRA YASH KALRA YASH KALRA";
-  const skills =
-    "FULL STACK DEVELOPER DSA ENTHUSIAST GRAPHIC DESIGNER VIDEO EDITOR";
-  const skills2 =
-    "GRAPHIC DESIGNER VIDEO EDITOR FULL STACK DEVELOPER DSA ENTHUSIAST";
-
-  const parentRef = useRef(null);
-  const refs = [
-    useRef(null),
-    useRef(null),
-    useRef(null),
-    useRef(null),
-    useRef(null),
-  ];
-  const insideRefs = [
-    useRef(null),
-    useRef(null),
-    useRef(null),
-    useRef(null),
-    useRef(null),
-  ];
-
-  const MeRef = [useRef(null), useRef(null)];
-  const imageRef = useRef(null);
-
-  const tagsRef = [useRef(null), useRef(null), useRef(null), useRef(null)];
-
-  useEffect(() => {
-    let ctx = gsap.context(() => {
-      refs.forEach((ref, index) => {
-        gsap.fromTo(
-          ref.current,
-          {
-            xPercent: -5 - 2 * index,
-          },
-          {
-            xPercent: 0,
-            scrollTrigger: {
-              trigger: parentRef.current,
-              start: "top 150%",
-              end: "bottom top",
-              scrub: true,
-            },
-          }
-        );
-      });
-      insideRefs.forEach((ref, index) => {
-        gsap.from(ref.current, {
-          xPercent: -10,
-          yPercent: 100,
-          opacity: 0,
-          delay: 0.35 * index,
-          ease: "power4.out",
-          duration: 2,
-          scrollTrigger: {
-            trigger: MeRef[0].current,
-            start: "top 150%",
-          },
-        });
-      });
-
-      gsap.from(MeRef[0].current, {
-        yPercent: 100,
-        opacity: 0,
-        duration: 2,
-        ease: "power4.out",
-        scrollTrigger: {
-          trigger: MeRef[0].current,
-          start: "top 150%",
-          end: "bottom top",
-        },
-      });
-      gsap.fromTo(
-        MeRef[1].current,
-        {
-          yPercent: 100,
-          opacity: 0,
-        },
-        {
-          yPercent: 0,
-          duration: 2,
-          delay: 0.5,
-          opacity: 1,
-          ease: "power4.out",
-          scrollTrigger: {
-            trigger: MeRef[1].current,
-            start: "top 150%",
-            end: "bottom top",
-          },
-        }
-      );
-      gsap.from(imageRef.current, {
-        yPercent: 100,
-        duration: 2,
-        delay: 0.5,
-        ease: "power4.out",
-        scrollTrigger: {
-          trigger: MeRef[0].current,
-          start: "top 150%",
-          end: "bottom top",
-        },
-      });
-
-      tagsRef.forEach((ref, index) => {
-        gsap.from(ref.current, {
-          yPercent: 100,
-          opacity: 0,
-          ease: "power2.out",
-          delay: index * 0.25,
-          scrollTrigger: {
-            trigger: ref.current,
-            start: "top 150%",
-            end: "bottom top",
-          },
-        });
-      });
-    });
-
-    return () => ctx.revert();
-  }, []);
-
-  let isIntersecting = useIntersectionObserver(imageRef, { threshold: 0.7 });
-
+const PortfolioGrid = () => {
   return (
-    <div ref={sectionRef} className="relative z-20" id="about">
-      <div className="overflow-x-clip 2xl:-mb-[27rem] xl:-mb-[15rem] lg:-mb-[4rem] ">
-        <div ref={parentRef} className="w-max">
-          <div ref={refs[0]} className="overflow-y-clip">
-            <h3
-              ref={insideRefs[0]}
-              className="md:text-xl tracking-[8px] md:tracking-[30px] font-bold"
-            >
-              {aboutme}
-            </h3>
-          </div>
-          <div ref={refs[1]} className="overflow-y-clip">
-            <h3
-              ref={insideRefs[1]}
-              className="mt-4 text-2xl md:text-7xl font-bold"
-            >
-              {name}
-            </h3>
-          </div>
-          <div ref={refs[2]} className="overflow-y-clip">
-            <h3
-              ref={insideRefs[2]}
-              className=" text-2xl md:text-7xl font-bold opacity-75"
-            >
-              {skills}
-            </h3>
-          </div>
-          <div ref={refs[3]} className="overflow-y-clip">
-            <h3
-              ref={insideRefs[3]}
-              className=" text-2xl md:text-7xl font-bold opacity-50"
-            >
-              {skills2}
-            </h3>
-          </div>
-          <div ref={refs[4]} className="overflow-y-clip">
-            <h3
-              ref={insideRefs[4]}
-              className="mt-4 md:text-xl tracking-[8px] md:tracking-[30px] font-extrabold"
-            >
-              {aboutme}
-            </h3>
-          </div>
-        </div>
-      </div>
-      <div className="md:container md:mx-auto flex flex-col-reverse md:flex-row items-end gap-8 px-8 py-10 mt-[3vw]">
-        <div className="w-full lg:w-3/4">
-          <div className="overflow-y-clip">
-            <h1 ref={MeRef[0]} className="text-xl sm:text-5xl font-extrabold ">
-              YASH <span className="text-[#CBACF9]">KALRA</span>
-            </h1>
-          </div>
-          <hr className="border-primary border-2 mt-4" />
-          <div className="mt-4 flex flex-wrap gap-1">
-            {[
-              "Full Stack Developer",
-              "Problem Solver(DSA)",
-              "Graphic Designer",
-              "Video Editor",
-            ].map((value, index) => (
-              <div
-                key={index}
-                ref={tagsRef[index]}
-                className="cursor-pointer fill-hover relative grow border-2 border-white/10 rounded-lg flex p-2 lg:p-4 justify-center hover:grow-[2] transition-[flex-grow] duration-300 text-sm hover:bg-gray-900"
-              >
-                <span>{value}</span>
-              </div>
-            ))}
-          </div>
-          <p
-            ref={MeRef[1]}
-            className="text-justify mt-6 text-xs font-light md:text-base mb-4"
+    <div className="min-h-screen bg-gradient-to-br from-[#010320] to-[#111325] p-4 md:p-8 flex items-center justify-center">
+      <div
+        className="max-w-7xl mx-auto w-full rounded-3xl p-4 md:p-8"
+        style={{ perspective: '1200px' }}
+      >
+        <div
+          className="grid grid-cols-1 md:grid-cols-2 gap-8"
+          style={{ transformStyle: 'preserve-3d' }}
+        >
+          {/* Grid 1 - Developer Card */}
+          <div className="group relative bg-gradient-to-br from-[#010320] to-[#111325] shadow-2xl rounded-2xl border-2 border-[#CBACF9]/60 transition-all duration-500 hover:scale-105 hover:-rotate-x-3 hover:-rotate-y-2 hover:shadow-3xl hover:border-[#CBACF9]/90"
+            style={{ transform: 'translateZ(40px)' }}
           >
-            I'm Yash Kalra, a final-year B.Tech CSE student at CUIET,
-            specializing in full-stack development using the MERN stack. With a
-            strong grasp of Data Structures and Algorithms, I excel in building
-            dynamic web applications and solving complex coding challenges,
-            continuously exploring new technologies to enhance my skills.
-          </p>
-        </div>
-        <div className="w-full md:w-1/2 overflow-y-clip">
-          <div className="group" ref={imageRef}>
-            <img
-              className={`absolute top-0 left-0 z-10 w-full h-full duration-700 ${
-                isIntersecting ? "opacity-0" : ""
-              }`}
-              src="assets/ME.png"
-              alt=""
-            />
-            <img
-              className="w-full h-full white-outline"
-              src="/assets/ME.png"
-              alt=""
-            />
+            <div className="space-y-4 p-8">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#CBACF9] to-[#8B5CF6] flex items-center justify-center shadow-lg border-2 border-[#CBACF9]/40 shadow-[#CBACF9]/20">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                  </svg>
+                </div>
+                <div className="w-2 h-2 rounded-full bg-[#CBACF9] animate-pulse"></div>
+                <div className="w-1 h-1 rounded-full bg-[#8B5CF6] animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+              </div>
+              <p className="text-white text-lg leading-relaxed font-medium">
+                A driven <span className="text-gradient">full stack developer</span>, everyday learner, and hybrid athlete. I craft end-to-end AI-powered applications, thrive in fast-paced teams, and love building products that matter.
+              </p>
+              <div className="flex gap-2 mt-6">
+                <div className="px-3 py-1 bg-[#CBACF9]/20 text-[#CBACF9] text-sm rounded-full border border-[#CBACF9]/30">
+                  AI-Powered
+                </div>
+                <div className="px-3 py-1 bg-[#8B5CF6]/20 text-[#8B5CF6] text-sm rounded-full border border-[#8B5CF6]/30">
+                  Full Stack
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Grid 2 - Relocation Card */}
+          <div className="group relative bg-gradient-to-br from-[#010320] to-[#111325] shadow-2xl rounded-2xl border-2 border-[#38BDF8]/60 transition-all duration-500 hover:scale-105 hover:rotate-x-2 hover:rotate-y-3 hover:shadow-3xl hover:border-[#38BDF8]/90"
+            style={{ transform: 'translateZ(30px)' }}
+          >
+            <div className="space-y-4 p-8">
+              <div className="flex items-center gap-2 mb-4">
+                <svg className="w-5 h-5 text-[#38BDF8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <span className="text-[#38BDF8] text-sm font-medium">Location Flexible</span>
+              </div>
+              <h3 className="text-xl font-semibold text-white">
+                Open to relocate across <span className="text-gradient">India</span>
+              </h3>
+              <p className="text-gray-400 text-sm">
+                Ready for new opportunities and adventures
+              </p>
+              <div className="flex gap-2 mt-6">
+                <div className="px-3 py-1 bg-[#38BDF8]/20 text-[#38BDF8] text-sm rounded-full border border-[#38BDF8]/30">
+                  Remote Ready
+                </div>
+                <div className="px-3 py-1 bg-[#CBACF9]/20 text-[#CBACF9] text-sm rounded-full border border-[#CBACF9]/30">
+                  Travel Friendly
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Grid 3 - Learning Card */}
+          <div className="group relative bg-gradient-to-br from-[#010320] to-[#111325] shadow-2xl rounded-2xl border-2 border-[#8B5CF6]/60 transition-all duration-500 hover:scale-105 hover:rotate-x-2 hover:-rotate-y-2 hover:shadow-3xl hover:border-[#8B5CF6]/90"
+            style={{ transform: 'translateZ(20px)' }}
+          >
+            <div className="space-y-4 p-8">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#8B5CF6] to-[#CBACF9] flex items-center justify-center shadow-md border-2 border-[#8B5CF6]/40 shadow-[#8B5CF6]/20">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  </svg>
+                </div>
+                <span className="text-[#8B5CF6] text-sm font-medium">The Inside Scoop</span>
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-3">
+                Currently Learning
+              </h3>
+              <div className="space-y-3">
+                <div className="p-3 bg-[#8B5CF6]/10 rounded-lg border border-[#8B5CF6]/20">
+                  <p className="text-white font-medium">LLM Application Integrations</p>
+                </div>
+                <div className="p-3 bg-[#CBACF9]/10 rounded-lg border border-[#CBACF9]/20">
+                  <p className="text-white font-medium">LangChain</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 mt-4 pt-4 border-t border-gray-600/50">
+                <div className="w-2 h-2 rounded-full bg-[#8B5CF6] animate-pulse"></div>
+                <span className="text-gray-400 text-sm">Always evolving</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Grid 4 - Vision Card */}
+          <div className="group relative bg-gradient-to-br from-[#010320] to-[#111325] shadow-2xl rounded-2xl border-2 border-[#CBACF9]/60 transition-all duration-500 hover:scale-105 hover:-rotate-x-2 hover:rotate-y-2 hover:shadow-3xl hover:border-[#CBACF9]/90"
+            style={{ transform: 'translateZ(10px)' }}
+          >
+            <div className="space-y-4 p-8 relative z-10">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#CBACF9] via-[#8B5CF6] to-[#38BDF8] flex items-center justify-center shadow-lg border-2 border-[#CBACF9]/40 shadow-[#CBACF9]/20">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                </div>
+                <div className="flex gap-1">
+                  <div className="w-1 h-6 bg-[#CBACF9] rounded-full animate-pulse"></div>
+                  <div className="w-1 h-4 bg-[#8B5CF6] rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+                  <div className="w-1 h-5 bg-[#38BDF8] rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+                </div>
+              </div>
+              <h3 className="text-xl font-semibold text-white leading-tight">
+                I can create your <span className="text-gradient">Vision/Business</span> into life<br />via my coding capabilities
+              </h3>
+              <p className="text-gray-400 text-sm leading-relaxed">
+                Transforming ideas into powerful digital solutions
+              </p>
+              <div className="grid grid-cols-2 gap-2 mt-6">
+                <div className="flex items-center gap-2 text-xs text-gray-400">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#CBACF9]"></div>
+                  <span>Web Apps</span>
+                </div>
+                <div className="flex items-center gap-2 text-xs text-gray-400">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#8B5CF6]"></div>
+                  <span>Mobile Apps</span>
+                </div>
+                <div className="flex items-center gap-2 text-xs text-gray-400">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#38BDF8]"></div>
+                  <span>AI Solutions</span>
+                </div>
+                <div className="flex items-center gap-2 text-xs text-gray-400">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#CBACF9]"></div>
+                  <span>Cloud Services</span>
+                </div>
+              </div>
+            </div>
+            {/* Background gradient effect */}
+            <div className="absolute inset-0 bg-gradient-to-br from-[#CBACF9]/3 via-transparent to-[#8B5CF6]/3 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
           </div>
         </div>
       </div>
     </div>
   );
-}
+};
+
+export default PortfolioGrid;
