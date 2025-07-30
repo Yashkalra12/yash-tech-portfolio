@@ -52,7 +52,7 @@ const PortfolioGrid = ({ sectionRef }) => {
                 <span className="text-[#38BDF8] text-sm font-medium">Location Flexible</span>
               </div>
               <h3 className="text-xl font-semibold text-white">
-                Open to relocate across <span className="text-gradient">India</span>
+                Open to relocate across <span className="text-gradient">The World</span>
               </h3>
               <p className="text-gray-400 text-sm">
                 Ready for new opportunities and adventures
