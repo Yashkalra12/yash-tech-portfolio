@@ -2,7 +2,7 @@ import React from 'react';
 
 const PortfolioGrid = ({ sectionRef }) => {
   return (
-    <div ref={sectionRef} className="min-h-screen bg-gradient-to-br from-[#010320] to-[#111325] p-4 md:p-8 flex items-center justify-center mt-[10%]" id="about">
+    <div ref={sectionRef} className="min-h-screen p-4 md:p-8 flex items-center justify-center mt-[10%]" id="about">
       <div
         className="max-w-7xl mx-auto w-full rounded-3xl p-4 md:p-8"
         style={{ perspective: '1200px' }}
@@ -12,7 +12,7 @@ const PortfolioGrid = ({ sectionRef }) => {
           style={{ transformStyle: 'preserve-3d' }}
         >
           {/* Grid 1 - Developer Card */}
-          <div className="group relative bg-gradient-to-br from-[#010320] to-[#111325] shadow-2xl rounded-2xl border-2 border-[#CBACF9]/60 transition-all duration-500 hover:scale-105 hover:-rotate-x-3 hover:-rotate-y-2 hover:shadow-3xl hover:border-[#CBACF9]/90"
+          <div className="group relative bg-gradient-to-br from-[#010320]/80 to-[#111325]/80 backdrop-blur-md shadow-2xl rounded-2xl border-2 border-[#CBACF9]/60 transition-all duration-500 hover:scale-105 hover:-rotate-x-3 hover:-rotate-y-2 hover:shadow-3xl hover:border-[#CBACF9]/90"
             style={{ transform: 'translateZ(40px)' }}
           >
             <div className="space-y-4 p-8">
@@ -40,7 +40,7 @@ const PortfolioGrid = ({ sectionRef }) => {
           </div>
 
           {/* Grid 2 - Relocation Card */}
-          <div className="group relative bg-gradient-to-br from-[#010320] to-[#111325] shadow-2xl rounded-2xl border-2 border-[#38BDF8]/60 transition-all duration-500 hover:scale-105 hover:rotate-x-2 hover:rotate-y-3 hover:shadow-3xl hover:border-[#38BDF8]/90"
+          <div className="group relative bg-gradient-to-br from-[#010320]/80 to-[#111325]/80 backdrop-blur-md shadow-2xl rounded-2xl border-2 border-[#38BDF8]/60 transition-all duration-500 hover:scale-105 hover:rotate-x-2 hover:rotate-y-3 hover:shadow-3xl hover:border-[#38BDF8]/90"
             style={{ transform: 'translateZ(30px)' }}
           >
             <div className="space-y-4 p-8">
@@ -69,7 +69,7 @@ const PortfolioGrid = ({ sectionRef }) => {
           </div>
 
           {/* Grid 3 - Learning Card */}
-          <div className="group relative bg-gradient-to-br from-[#010320] to-[#111325] shadow-2xl rounded-2xl border-2 border-[#8B5CF6]/60 transition-all duration-500 hover:scale-105 hover:rotate-x-2 hover:-rotate-y-2 hover:shadow-3xl hover:border-[#8B5CF6]/90"
+          <div className="group relative bg-gradient-to-br from-[#010320]/80 to-[#111325]/80 backdrop-blur-md shadow-2xl rounded-2xl border-2 border-[#8B5CF6]/60 transition-all duration-500 hover:scale-105 hover:rotate-x-2 hover:-rotate-y-2 hover:shadow-3xl hover:border-[#8B5CF6]/90"
             style={{ transform: 'translateZ(20px)' }}
           >
             <div className="space-y-4 p-8">
@@ -100,7 +100,7 @@ const PortfolioGrid = ({ sectionRef }) => {
           </div>
 
           {/* Grid 4 - Vision Card */}
-          <div className="group relative bg-gradient-to-br from-[#010320] to-[#111325] shadow-2xl rounded-2xl border-2 border-[#CBACF9]/60 transition-all duration-500 hover:scale-105 hover:-rotate-x-2 hover:rotate-y-2 hover:shadow-3xl hover:border-[#CBACF9]/90"
+          <div className="group relative bg-gradient-to-br from-[#010320]/80 to-[#111325]/80 backdrop-blur-md shadow-2xl rounded-2xl border-2 border-[#CBACF9]/60 transition-all duration-500 hover:scale-105 hover:-rotate-x-2 hover:rotate-y-2 hover:shadow-3xl hover:border-[#CBACF9]/90"
             style={{ transform: 'translateZ(10px)' }}
           >
             <div className="space-y-4 p-8 relative z-10">
