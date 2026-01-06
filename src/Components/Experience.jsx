@@ -33,10 +33,26 @@ const Experience = () => {
   const experienceData = [
     {
       id: 1,
+      companyName: "Munshot PTE Ltd",
+      shortName: "Munshot",
+      role: "Full Stack Developer",
+      duration: "Feb 2025 - Jan 2026",
+      image: "assets/munsgot_logo.png",
+      responsibilities: [
+        "Engineered an AI-based stock market analyzer application, focusing on developing and testing essential APIs to ensure functionality and performance.",
+
+        "Implemented an Analysts Agents screen, integrating 10+ APIs from scratch in the frontend handling the complete process from design to functionality.",
+
+        "Built a Stocks Portfolio panel from scratch, integrating it with existing screens, implementing toggle functionality, and enabling stock listing by fetching data from the Redux store."
+      ],
+      certificateLink: "https://www.linkedin.com/company/munshot/about/",
+    },
+    {
+      id: 2,
       companyName: "Lumio AI",
       shortName: "Lumio AI",
       role: "SWE",
-      duration: "Feb 2025 - July 2025",
+      duration: "Sep 2024 – Feb 2025",
       image: "assets/LumioAi.png",
       responsibilities: [
         "Built and deployed 5+ projects from scratch using React, Angular, Next.js, and FastAPI.",
@@ -48,22 +64,6 @@ const Experience = () => {
         "Developed a flagging system in a monorepo to validate data from thousands of PDFs against ground truth JSON, improving accuracy by 80%."
       ],
       certificateLink: "https://www.teamlumio.ai/", 
-    },
-    {
-      id: 2,
-      companyName: "Munshot PTE Ltd",
-      shortName: "Munshot",
-      role: "Full Stack Developer",
-      duration: "Sep 2024 - Jan 2025",
-      image: "assets/munsgot_logo.png",
-      responsibilities: [
-        "Engineered an AI-based stock market analyzer application, focusing on developing and testing essential APIs to ensure functionality and performance.",
-
-        "Implemented an Analysts Agents screen, integrating 10+ APIs from scratch in the frontend handling the complete process from design to functionality.",
-
-        "Built a Stocks Portfolio panel from scratch, integrating it with existing screens, implementing toggle functionality, and enabling stock listing by fetching data from the Redux store."
-      ],
-      certificateLink: "https://www.linkedin.com/company/munshot/about/",
     },
     
   ];
