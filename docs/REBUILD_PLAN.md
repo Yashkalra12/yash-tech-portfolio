@@ -93,6 +93,47 @@ Next things worth doing when picking this up again:
   `HandControlProvider.jsx` (`SCROLL_GAIN`, `SCROLL_DEADZONE`, `SMOOTHING`,
   `CLICK_COOLDOWN_MS`) — worth adjusting on real hardware.
 
+## Handsfree control — ported from `AVIVASHISHTA29/repository-2024`
+
+The live site's handsfree feature is **not** in `Portfolio2021` (that is still the
+old CRA build). It is in **`repository-2024`**, whose
+`src/providers/CameraInputProvider.ts` is the spec. What was ported, and where it
+now lives:
+
+| Reference file | Our file |
+| --- | --- |
+| `CameraInputProvider.ts` (geometry) | `features/handControl/gestures.js` |
+| `CameraInputProvider.ts` (camera + models) | `features/handControl/useVisionTracking.js` |
+| `CameraInputProvider.ts` (gesture state machine) | `features/handControl/HandControlProvider.jsx` |
+| `CameraFeedback.tsx` + `HandCursor.tsx` | `features/handControl/HandCursor.jsx` |
+| `GestureTutorial.tsx` | `features/handControl/GestureTutorial.jsx` |
+| `HorizontalSkills.tsx` + `horizontalSkills.scss` | `ui/SkillsMarquee.jsx` |
+
+Gesture vocabulary, matching the tutorial modal:
+
+- **Head tracking** — nose offset from face centre, normalised by face size, ×3,
+  clamped to −1..1. Steers the cursor whenever no hand is in frame.
+- **Open hand** — palm (landmark 9) takes over the cursor.
+- **Pinch to click** — thumb-index under `0.05`, released over `0.08`
+  (hysteresis), 3 frames of agreement each way, 300ms cooldown.
+- **Pinch & drag to scroll** — a held pinch that travels more than 15px vertically
+  becomes a scroll at 8px per px, inverted (grab and pull), and coasts on release
+  with `velocity *= 0.95` per frame until under 0.5px.
+- **Fist** — hard-cancels, and suppresses pinches for 200ms afterwards.
+
+Two deliberate departures from the reference:
+
+1. Delegate handling. The reference hardcodes `delegate: "GPU"`; we probe WebGL2,
+   catch build failures, and rebuild on CPU if a delegate that built produces no
+   detection within 3s (see bug 10 below).
+2. `SkillsMarquee` animates a transform over a duplicated list rather than
+   animating `scrollLeft` with manual wrap-around, which avoids fighting scroll
+   anchoring and stealing touch gestures on iOS.
+
+`gestures.js` is pure geometry — no React, no DOM — and is unit-tested by
+`npm run test:gestures` (26 assertions, including the fist-that-looks-like-a-pinch
+trap and head-pose scale invariance).
+
 ## Bugs found and fixed during the build
 
 1. `Reorder.Values` does not exist in framer-motion; the API is `Reorder.Group`.
