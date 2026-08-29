@@ -81,26 +81,33 @@ export const skillGroups = [
   ["Data & Infra", "MongoDB, SQL, Redux, Zustand, Git"],
 ];
 
-/** Flat skill list with logo files from `public/skills/`. */
+/**
+ * Flat skill list with logo files from `public/skills/`.
+ *
+ * `color` is each technology's own brand colour, used to tint its tile in the
+ * scrolling marquee. Tinted rather than filled: eighteen saturated blocks in a row
+ * fight each other, and a few of these brands (JavaScript yellow, GitHub black)
+ * have no readable white-on-brand version anyway.
+ */
 export const skills = [
-  { img: "html.png", title: "HTML" },
-  { img: "css.png", title: "CSS" },
-  { img: "tailwind.svg", title: "Tailwind CSS" },
-  { img: "js.png", title: "JavaScript" },
-  { img: "Typescript.png", title: "TypeScript" },
-  { img: "python.png", title: "Python" },
-  { img: "react.png", title: "React" },
-  { img: "reactquery.png", title: "React Query" },
-  { img: "redux.png", title: "Redux" },
-  { img: "zustand.svg", title: "Zustand" },
-  { img: "node.png", title: "Node.js" },
-  { img: "express.jpg", title: "Express.js" },
-  { img: "django.png", title: "Django" },
-  { img: "mongo.png", title: "MongoDB" },
-  { img: "sql.png", title: "SQL" },
-  { img: "postman.png", title: "Postman" },
-  { img: "git.png", title: "Git" },
-  { img: "github.png", title: "GitHub" },
+  { img: "html.png", title: "HTML", color: "#E34F26" },
+  { img: "css.png", title: "CSS", color: "#1572B6" },
+  { img: "tailwind.svg", title: "Tailwind CSS", color: "#06B6D4" },
+  { img: "js.png", title: "JavaScript", color: "#F7DF1E" },
+  { img: "Typescript.png", title: "TypeScript", color: "#3178C6" },
+  { img: "python.png", title: "Python", color: "#3776AB" },
+  { img: "react.png", title: "React", color: "#61DAFB" },
+  { img: "reactquery.png", title: "React Query", color: "#FF4154" },
+  { img: "redux.png", title: "Redux", color: "#764ABC" },
+  { img: "zustand.svg", title: "Zustand", color: "#B8763E" },
+  { img: "node.png", title: "Node.js", color: "#5FA04E" },
+  { img: "express.jpg", title: "Express.js", color: "#4B5563" },
+  { img: "django.png", title: "Django", color: "#0C4B33" },
+  { img: "mongo.png", title: "MongoDB", color: "#47A248" },
+  { img: "sql.png", title: "SQL", color: "#00758F" },
+  { img: "postman.png", title: "Postman", color: "#FF6C37" },
+  { img: "git.png", title: "Git", color: "#F05032" },
+  { img: "github.png", title: "GitHub", color: "#181717" },
 ];
 
 export const experience = [
