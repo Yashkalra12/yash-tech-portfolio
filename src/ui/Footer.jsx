@@ -58,16 +58,6 @@ export default function Footer() {
         <div className="text-sm text-slate-400 md:text-right">
           <p>Designed and developed by me © {new Date().getFullYear()}</p>
           <p className="mt-1">
-            UI inspired by{" "}
-            <a
-              href="https://github.com/AVIVASHISHTA29/Portfolio2021"
-              target="_blank"
-              rel="noreferrer noopener"
-              className="underline decoration-dotted hover:text-[#006AFF]"
-            >
-              Avi Vashishta&apos;s Portfolio2021
-            </a>
-            {" · "}
             <a href="/llms.txt" className="underline decoration-dotted hover:text-[#006AFF]">
               llms.txt
             </a>
