@@ -11,6 +11,7 @@
     "prebuild": "npm run mediapipe",
     "build": "npm run llms && vite build",
     "lint": "eslint .",
+    "test:gestures": "node scripts/test-gestures.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
