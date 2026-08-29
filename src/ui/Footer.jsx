@@ -1,6 +1,6 @@
 /**
- * Socials + sign-off, following the reference's Footer: name, a handwritten
- * farewell, and a row of social links.
+ * Socials + sign-off: a card per channel, then a black pill echoing the header's
+ * dynamic island so the page opens and closes on the same shape.
  */
 
 import { FaEnvelope, FaGithub, FaLinkedin, FaWhatsapp } from "react-icons/fa";
@@ -15,6 +15,17 @@ const ICONS = {
   email: <FaEnvelope />,
   whatsapp: <FaWhatsapp />,
 };
+
+const hrefFor = (id) => socials.find((social) => social.id === id)?.href;
+
+/** The pill at the very bottom. Deliberately short — four ways to leave the page. */
+const SIGN_OFF = [
+  { label: "LinkedIn", href: hrefFor("linkedin"), dot: true, external: true },
+  { label: "Github", href: hrefFor("github"), dot: true, external: true },
+  // mailto: hands off to a mail client, so a new tab would just flash and close.
+  { label: "Email", href: hrefFor("email"), dot: true, external: false },
+  { label: "llms.txt", href: "/llms.txt", dot: false, external: false },
+];
 
 export default function Footer() {
   return (
@@ -48,21 +59,24 @@ export default function Footer() {
         ))}
       </div>
 
-      <div className="mt-14 flex flex-col items-start gap-2 border-t border-[#ededed] pt-8 md:flex-row md:items-end md:justify-between">
-        <div>
-          <p className="text-2xl font-bold">
-            {identity.name} <span className="text-[#FE5E58]">.</span>
-          </p>
-          <p className="font-cartoon text-2xl text-[#FE5E58]">Until next time :p</p>
-        </div>
-        <div className="text-sm text-slate-400 md:text-right">
-          <p>Designed and developed by me © {new Date().getFullYear()}</p>
-          <p className="mt-1">
-            <a href="/llms.txt" className="underline decoration-dotted hover:text-[#006AFF]">
-              llms.txt
+      {/* Signs off with the same black pill as the header, so the page opens and
+          closes on the same shape. No name, no copyright line — the heading above
+          already says whose site this is. */}
+      <div className="mt-14 flex justify-center">
+        <nav className="flex items-center gap-1 rounded-full bg-[#232323] px-4 py-3 shadow-[0_8px_30px_rgba(0,0,0,0.18)] sm:gap-1.5 sm:px-6">
+          {SIGN_OFF.map((item) => (
+            <a
+              key={item.label}
+              href={item.href}
+              // llms.txt is on this origin; everything else leaves the site.
+              {...(item.external ? { target: "_blank", rel: "noreferrer noopener" } : {})}
+              className="island-link"
+            >
+              {item.label}
+              {item.dot ? <span className="text-[#4d9bff]">.</span> : null}
             </a>
-          </p>
-        </div>
+          ))}
+        </nav>
       </div>
     </footer>
   );
