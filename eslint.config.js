@@ -5,7 +5,9 @@ import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 
 export default [
-  { ignores: ['dist'] },
+  // public/mediapipe is generated: minified wasm glue copied out of node_modules by
+  // scripts/copy-mediapipe-wasm.mjs, and worth ~1000 lint errors if not excluded.
+  { ignores: ['dist', 'public/mediapipe'] },
   {
     files: ['**/*.{js,jsx}'],
     languageOptions: {
