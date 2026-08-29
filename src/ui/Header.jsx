@@ -78,7 +78,7 @@ export default function Header() {
         onBlur={(e) => {
           if (!e.currentTarget.contains(e.relatedTarget)) setOpen(false);
         }}
-        className="pointer-events-auto flex items-center gap-1 rounded-full bg-[#0d0d0f] py-2 pl-2 pr-3 text-white shadow-[0_8px_30px_rgba(0,0,0,0.28)] ring-1 ring-white/10"
+        className="pointer-events-auto flex items-center gap-2 rounded-full bg-[#0d0d0f] py-2 pl-2 pr-3 text-white shadow-[0_8px_30px_rgba(0,0,0,0.28)] ring-1 ring-white/10 sm:gap-3"
       >
         <motion.button
           layout="position"
@@ -111,7 +111,9 @@ export default function Header() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: reduceMotion ? 0 : 0.18 }}
-              className="flex shrink-0 items-center gap-0.5 whitespace-nowrap"
+              // The left padding is what keeps the cross from crowding "Skill." and
+              // gives the expanded pill its stretched-out look.
+              className="flex shrink-0 items-center gap-1 whitespace-nowrap pl-1 sm:gap-1.5 sm:pl-2"
             >
               {NAV.map((item) =>
                 item.href ? (
