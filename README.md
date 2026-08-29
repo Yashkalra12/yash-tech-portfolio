@@ -68,9 +68,22 @@ modal says so up front when the origin is insecure.
 **Delegates.** Tracking prefers MediaPipe's GPU delegate but falls back to CPU
 whenever WebGL2 is unavailable (Chrome with hardware acceleration off, several
 mobile browsers) — otherwise the wasm graph dies with
-`emscripten_webgl_create_context() returned error 0`. The preview shows a `CPU`
-badge when it has fallen back. Inference is capped at ~25fps so the CPU path
-stays usable on a phone.
+`emscripten_webgl_create_context() returned error 0`. That failure is often not a
+thrown exception: the graph builds, and inference then returns empty results
+forever. So there is also a watchdog — if the GPU delegate produces no detection
+at all in its first 2.5 seconds, it is rebuilt on CPU. Inference is capped at
+~25fps so the CPU path stays usable on a phone.
+
+The preview shows a live readout (`GPU 25fps · tracking` / `· no hand`) so a
+silent failure is never invisible. Append `?handcpu=1` to the URL to force the
+CPU delegate.
+
+**The wasm runtime is served from this origin**, copied out of
+`node_modules/@mediapipe/tasks-vision` into `public/mediapipe/wasm` by
+`scripts/copy-mediapipe-wasm.mjs` (wired into `predev` and `prebuild`, and
+gitignored). Pointing MediaPipe at a CDN version pins the binaries independently
+of the JS glue we import, and a mismatch there is another way to get a graph that
+builds and then detects nothing.
 
 ## Running it
 
