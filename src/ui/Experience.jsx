@@ -11,7 +11,9 @@ import { experience } from "../data/profile";
 export default function Experience() {
   return (
     <section id="experience" className="scroll-mt-24 py-16">
-      <SectionHeading dotColor="#27C841">Experience</SectionHeading>
+      <SectionHeading accent="Destructuring" dotColor="#27C841">
+        My Work Experience
+      </SectionHeading>
 
       <div className="mt-8 space-y-8">
         {experience.map((job) => (
