@@ -122,6 +122,18 @@ Next things worth doing when picking this up again:
 9. The cursor position was React state written on every gesture frame, so the
    whole page subtree re-rendered up to 60×/sec. It is a ref now; `HandCursor`
    paints the cursor and the skeleton from one animation frame loop.
+10. Camera opened but nothing was ever detected. Two causes, both of which fail
+    *silently* — the graph builds, then `detectForVideo` returns empty results
+    forever, so counting thrown errors never helped:
+    - The wasm runtime was loaded from the `0.10.14` CDN while the installed
+      package was `0.10.35`. It is now copied out of `node_modules` into
+      `public/mediapipe/wasm` at build time, so the versions cannot drift.
+    - A GPU delegate that passes the WebGL2 probe can still fail inside wasm.
+      There is now a watchdog: no detection within 2.5s of starting means the
+      landmarker is rebuilt on CPU.
+    Detection confidences also dropped from 0.5 to 0.3 — the defaults reject a
+    lot of real hands in ordinary webcam lighting — and the preview grew a live
+    fps/tracking readout so this class of failure is visible next time.
 
 ## Data captured in profile.js
 
