@@ -54,8 +54,23 @@ npm run llms   # regenerate public/llms.txt
   requested from that click. Turn it off any time from the corner button.
 - **Video never leaves the device** — frames are processed in-browser by Google's
   MediaPipe HandLandmarker. Nothing is recorded or uploaded.
+- A small mirrored preview in the bottom-left corner draws the detected hand
+  skeleton, so you can see whether the tracker has actually found your hand.
 - The ~2MB MediaPipe bundle is dynamically imported, so visitors who never turn
   it on never download it.
+
+**It needs an HTTPS origin.** `getUserMedia` is only available in a secure
+context, so the camera works on the deployed site and on `localhost`, but *not*
+over plain http on a LAN IP — which is the usual way people try it from a phone.
+Use the deployed URL or a tunnel (`npx localtunnel --port 5173`). The consent
+modal says so up front when the origin is insecure.
+
+**Delegates.** Tracking prefers MediaPipe's GPU delegate but falls back to CPU
+whenever WebGL2 is unavailable (Chrome with hardware acceleration off, several
+mobile browsers) — otherwise the wasm graph dies with
+`emscripten_webgl_create_context() returned error 0`. The preview shows a `CPU`
+badge when it has fallen back. Inference is capped at ~25fps so the CPU path
+stays usable on a phone.
 
 ## Running it
 
