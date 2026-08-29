@@ -107,6 +107,21 @@ Next things worth doing when picking this up again:
    term was common; lowered to 0.12, leaning on the relative band instead.
 5. `src/components` would have collided with the existing `src/Components` on
    case-insensitive macOS filesystems — new UI went to `src/ui/` instead.
+6. Hand control never started for real users: the delegate was hardcoded to
+   `"GPU"`, and without a WebGL context the wasm graph fails with
+   `emscripten_webgl_create_context() returned error 0` / `kGpuService ... was
+   not provided`. Now WebGL2 is probed up front, GPU creation is wrapped in a
+   try/catch, and a delegate that builds but then fails every frame is rebuilt on
+   CPU after 12 consecutive bad frames.
+7. Camera start was fragile on phones: fixed `640x480` constraints could throw
+   `OverconstrainedError`, and iOS Safari can reject `play()` before
+   `loadedmetadata`. Constraints are now `ideal`, and metadata is awaited.
+8. Nothing told the visitor that `getUserMedia` needs a secure context — the
+   single biggest reason it "doesn't work on my phone". Both the hook and the
+   consent modal now say so explicitly.
+9. The cursor position was React state written on every gesture frame, so the
+   whole page subtree re-rendered up to 60×/sec. It is a ref now; `HandCursor`
+   paints the cursor and the skeleton from one animation frame loop.
 
 ## Data captured in profile.js
 
