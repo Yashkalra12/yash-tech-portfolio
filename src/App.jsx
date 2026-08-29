@@ -6,7 +6,7 @@ import Navbar from "./Components/Navbar";
 import Home from "./Pages/Home";
 
 /**
- * The 2021-inspired rebuild lives at `/`.
+ * The current portfolio lives at `/`.
  *
  * The previous dark-themed portfolio is kept at `/legacy` while the new design
  * is iterated on — nothing is deleted, so the two can be compared side by side.
