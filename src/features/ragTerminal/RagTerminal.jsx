@@ -2,9 +2,18 @@
  * The RAG terminal: ask anything about Yash and get an answer grounded in the
  * local knowledge base, with the retrieved sources shown so you can see where
  * the answer came from.
+ *
+ * An answer arrives in four visible stages — searching, generating, typing out,
+ * settled. Retrieval is local BM25 and finishes in about a millisecond, so without
+ * the floors below all of that would flash past in one frame and the answer would
+ * simply appear, which reads as a canned lookup rather than something being worked
+ * out. The staging is also the seam where a real model gets plugged in later: the
+ * phases are already the ones a streaming completion has, so only `synthesize`
+ * changes.
  */
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useReducedMotion } from "framer-motion";
 import MacWindow from "../../ui/MacWindow";
 import { identity } from "../../data/profile";
 import { chunks } from "./knowledge";
@@ -17,6 +26,14 @@ const BANNER = [
   "Type a question, or `help` for commands.",
 ];
 
+/** Minimum time each pre-answer stage stays on screen, so it can be read. */
+const SEARCH_MS = 320;
+const GENERATE_MS = 420;
+/** Characters revealed per frame while typing out. ~180/sec at 60fps. */
+const CHARS_PER_FRAME = 3;
+
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 let lineId = 0;
 const nextId = () => `line-${lineId++}`;
 
@@ -27,25 +44,60 @@ const line = (kind, extra = {}) => ({ id: nextId(), kind, ...extra });
 export default function RagTerminal() {
   const [history, setHistory] = useState(() => [line("banner", { lines: BANNER })]);
   const [input, setInput] = useState("");
-  const [busy, setBusy] = useState(false);
+  /** idle → searching → generating → typing → idle */
+  const [phase, setPhase] = useState("idle");
+  /** The answer being typed out: the full text plus how much of it is visible. */
+  const [stream, setStream] = useState(null);
   const [recall, setRecall] = useState([]);
   const [recallIndex, setRecallIndex] = useState(-1);
 
   const scrollRef = useRef(null);
   const inputRef = useRef(null);
   const abortRef = useRef(null);
+  const reduceMotion = useReducedMotion();
+
+  const busy = phase !== "idle";
+  // The input stays live while typing out, because Enter skips to the end there.
+  const locked = phase === "searching" || phase === "generating";
 
   const append = useCallback((...lines) => {
     setHistory((prev) => [...prev, ...lines]);
   }, []);
 
-  // Keep the newest output in view as it streams in.
+  // Keep the newest output in view as it arrives.
   useEffect(() => {
     const el = scrollRef.current;
     if (el) el.scrollTop = el.scrollHeight;
-  }, [history, busy]);
+  }, [history, phase, stream?.shown]);
 
   useEffect(() => () => abortRef.current?.abort(), []);
+
+  // Reveal the answer a few characters at a time. Driven from a frame loop rather
+  // than an interval so it stays in step with painting and pauses in background tabs.
+  useEffect(() => {
+    if (phase !== "typing") return undefined;
+    let raf = requestAnimationFrame(function tick() {
+      setStream((prev) => {
+        if (!prev) return prev;
+        const shown = Math.min(prev.text.length, prev.shown + CHARS_PER_FRAME);
+        return shown === prev.shown ? prev : { ...prev, shown };
+      });
+      raf = requestAnimationFrame(tick);
+    });
+    return () => cancelAnimationFrame(raf);
+  }, [phase]);
+
+  // Fully revealed: commit it to history as a normal line and stand down.
+  useEffect(() => {
+    if (phase !== "typing" || !stream || stream.shown < stream.text.length) return;
+    append(line("answer", { text: stream.text, sources: stream.sources, mode: stream.mode }));
+    setStream(null);
+    setPhase("idle");
+  }, [phase, stream, append]);
+
+  const finishTyping = useCallback(() => {
+    setStream((prev) => (prev ? { ...prev, shown: prev.text.length } : prev));
+  }, []);
 
   const submit = useCallback(
     async (raw) => {
@@ -72,36 +124,52 @@ export default function RagTerminal() {
         return;
       }
 
-      setBusy(true);
       abortRef.current?.abort();
       const controller = new AbortController();
       abortRef.current = controller;
 
       try {
-        const { text, sources, mode } = await synthesize(query, { signal: controller.signal });
+        setPhase("searching");
+        // Retrieval and the floor run together, so a slow answer never waits on the
+        // floor and a fast one still gets its moment.
+        const [answer] = await Promise.all([
+          synthesize(query, { signal: controller.signal }),
+          wait(SEARCH_MS),
+        ]);
         if (controller.signal.aborted) return;
-        append(line("answer", { text, sources, mode }));
+
+        setPhase("generating");
+        await wait(GENERATE_MS);
+        if (controller.signal.aborted) return;
+
+        if (reduceMotion || !answer.text) {
+          append(line("answer", answer));
+          setPhase("idle");
+        } else {
+          setStream({ ...answer, shown: 0 });
+          setPhase("typing");
+        }
       } catch {
         append(
           line("error", {
             text: "Something went wrong answering that. Try rephrasing, or run `help`.",
           }),
         );
+        setPhase("idle");
       } finally {
-        if (abortRef.current === controller) {
-          abortRef.current = null;
-          setBusy(false);
-        }
+        if (abortRef.current === controller) abortRef.current = null;
       }
     },
-    [append, busy],
+    [append, busy, reduceMotion],
   );
 
   /** Up/down arrows walk back through what you have already asked. */
   const onKeyDown = (event) => {
     if (event.key === "Enter") {
       event.preventDefault();
-      submit(input);
+      // Enter mid-answer means "stop teasing and show me", not "ask again".
+      if (phase === "typing") finishTyping();
+      else submit(input);
       return;
     }
     if (event.key !== "ArrowUp" && event.key !== "ArrowDown") return;
@@ -151,7 +219,21 @@ export default function RagTerminal() {
             <TerminalLine key={entry.id} entry={entry} />
           ))}
 
-          {busy ? <p className="mt-2 animate-pulse text-slate-500">searching…</p> : null}
+          {phase === "searching" ? (
+            <Working label={`searching ${chunks.length} passages`} />
+          ) : null}
+          {phase === "generating" ? <Working label="generating" /> : null}
+
+          {/* The answer as it types out. Announced politely so a screen reader gets
+              the finished text once, rather than every third character. */}
+          {stream ? (
+            <p className="mt-1 whitespace-pre-wrap text-slate-200" aria-live="polite">
+              {stream.text.slice(0, stream.shown)}
+              <span aria-hidden className="ml-0.5 animate-pulse text-[#27C841]">
+                ▌
+              </span>
+            </p>
+          ) : null}
 
           <div className="mt-2 flex items-start gap-2">
             <span aria-hidden className="select-none text-[#27C841]">
@@ -162,11 +244,13 @@ export default function RagTerminal() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={onKeyDown}
-              disabled={busy}
+              disabled={locked}
               spellCheck={false}
               autoComplete="off"
               aria-label="Ask a question about Yash"
-              placeholder={busy ? "" : "what did he build at Munshot?"}
+              placeholder={
+                locked ? "" : phase === "typing" ? "↵ to skip" : "what did he build at Munshot?"
+              }
               className="flex-1 border-none bg-transparent text-slate-100 caret-[#27C841] outline-none placeholder:text-slate-600 disabled:opacity-50"
             />
           </div>
@@ -187,6 +271,26 @@ export default function RagTerminal() {
         ))}
       </div>
     </section>
+  );
+}
+
+/** A pre-answer stage: label plus three dots pulsing in sequence. */
+function Working({ label }) {
+  return (
+    <p className="mt-2 flex items-center gap-1 text-slate-500">
+      {label}
+      {[0, 1, 2].map((i) => (
+        <span
+          key={i}
+          aria-hidden
+          className="animate-pulse"
+          // Staggered so the dots chase each other instead of blinking as one block.
+          style={{ animationDelay: `${i * 160}ms` }}
+        >
+          .
+        </span>
+      ))}
+    </p>
   );
 }
 
