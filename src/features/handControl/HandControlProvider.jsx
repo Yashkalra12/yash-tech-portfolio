@@ -10,6 +10,12 @@
  *
  * Nothing here runs until the visitor explicitly opts in via PermissionGate;
  * the camera is only ever requested from a user gesture.
+ *
+ * Note on state: the cursor position lives in a ref, not in state. Gestures
+ * arrive at up to 60Hz, and re-rendering the whole page subtree that often made
+ * the cursor stutter. HandCursor reads the ref from its own animation frame and
+ * writes the position straight to the DOM. Only coarse things that change a few
+ * times a second — mode, pinching, whether a hand is visible — are state.
  */
 
 import { useCallback, useMemo, useRef, useState } from "react";
@@ -27,13 +33,38 @@ const SMOOTHING = 0.35;
 
 export function HandControlProvider({ children }) {
   const [enabled, setEnabled] = useState(false);
-  const [pointer, setPointer] = useState(null);
   const [pinching, setPinching] = useState(false);
+  const [handPresent, setHandPresent] = useState(false);
   const [mode, setMode] = useState("idle"); // idle | scroll | click
 
-  const smoothedRef = useRef(null);
+  /** Latest smoothed cursor position in normalised units, or null. */
+  const pointerRef = useRef(null);
   const scrollAnchorRef = useRef(null);
   const lastClickRef = useRef(0);
+
+  // Mirror the coarse state in refs so the gesture handler can compare against
+  // the current value without re-subscribing every render.
+  const pinchingStateRef = useRef(false);
+  const modeRef = useRef("idle");
+  const presentRef = useRef(false);
+
+  const setPinchingIfChanged = useCallback((value) => {
+    if (pinchingStateRef.current === value) return;
+    pinchingStateRef.current = value;
+    setPinching(value);
+  }, []);
+
+  const setModeIfChanged = useCallback((value) => {
+    if (modeRef.current === value) return;
+    modeRef.current = value;
+    setMode(value);
+  }, []);
+
+  const setPresentIfChanged = useCallback((value) => {
+    if (presentRef.current === value) return;
+    presentRef.current = value;
+    setHandPresent(value);
+  }, []);
 
   /**
    * Dispatch a real click at the cursor. We hide the overlay for the hit test
@@ -49,14 +80,12 @@ export function HandControlProvider({ children }) {
     const py = y * window.innerHeight;
 
     const overlay = document.getElementById("hand-cursor-layer");
-    const previousPointerEvents = overlay?.style.pointerEvents;
-    if (overlay) overlay.style.pointerEvents = "none";
+    const previousVisibility = overlay?.style.visibility;
+    if (overlay) overlay.style.visibility = "hidden";
 
     const target = document.elementFromPoint(px, py);
 
-    if (overlay && previousPointerEvents !== undefined) {
-      overlay.style.pointerEvents = previousPointerEvents;
-    }
+    if (overlay) overlay.style.visibility = previousVisibility ?? "";
     if (!target) return;
 
     const clickable = target.closest(
@@ -73,36 +102,37 @@ export function HandControlProvider({ children }) {
   const handleGesture = useCallback(
     (gesture) => {
       if (!gesture.present) {
-        setPointer(null);
-        setMode("idle");
-        setPinching(false);
-        smoothedRef.current = null;
+        pointerRef.current = null;
         scrollAnchorRef.current = null;
+        setPresentIfChanged(false);
+        setModeIfChanged("idle");
+        setPinchingIfChanged(false);
         return;
       }
 
       // Smooth the raw fingertip position — landmark output is noisy frame to
       // frame, and an unsmoothed cursor is unusable for aiming at a button.
-      const previous = smoothedRef.current;
+      const previous = pointerRef.current;
       const next = previous
         ? {
             x: previous.x + (gesture.pointer.x - previous.x) * SMOOTHING,
             y: previous.y + (gesture.pointer.y - previous.y) * SMOOTHING,
           }
         : gesture.pointer;
-      smoothedRef.current = next;
-      setPointer(next);
-      setPinching(gesture.pinching);
+      pointerRef.current = next;
+
+      setPresentIfChanged(true);
+      setPinchingIfChanged(gesture.pinching);
 
       if (gesture.pinchStarted) {
-        setMode("click");
+        setModeIfChanged("click");
         clickAtPointer(next.x, next.y);
         scrollAnchorRef.current = null;
         return;
       }
 
       if (gesture.isOpenPalm && !gesture.pinching) {
-        setMode("scroll");
+        setModeIfChanged("scroll");
         const anchor = scrollAnchorRef.current;
         if (anchor === null) {
           scrollAnchorRef.current = next.y;
@@ -118,43 +148,48 @@ export function HandControlProvider({ children }) {
         return;
       }
 
-      setMode("idle");
+      setModeIfChanged("idle");
       scrollAnchorRef.current = null;
     },
-    [clickAtPointer],
+    [clickAtPointer, setModeIfChanged, setPinchingIfChanged, setPresentIfChanged],
   );
 
   const tracking = useHandTracking({ onGesture: handleGesture });
 
+  /** @returns {Promise<boolean>} whether tracking actually started. */
   const enable = useCallback(async () => {
     setEnabled(true);
     await tracking.start();
+    return tracking.statusRef.current === "running";
   }, [tracking]);
 
   const disable = useCallback(() => {
     tracking.stop();
     setEnabled(false);
-    setPointer(null);
-    setPinching(false);
-    setMode("idle");
-    smoothedRef.current = null;
+    pointerRef.current = null;
     scrollAnchorRef.current = null;
-  }, [tracking]);
+    setPresentIfChanged(false);
+    setPinchingIfChanged(false);
+    setModeIfChanged("idle");
+  }, [tracking, setModeIfChanged, setPinchingIfChanged, setPresentIfChanged]);
 
   const value = useMemo(
     () => ({
       enabled,
       enable,
       disable,
-      pointer,
+      pointerRef,
+      handPresent,
       pinching,
       mode,
       status: tracking.status,
       error: tracking.error,
+      delegate: tracking.delegate,
       isRunning: tracking.isRunning,
       videoRef: tracking.videoRef,
+      landmarksRef: tracking.landmarksRef,
     }),
-    [enabled, enable, disable, pointer, pinching, mode, tracking],
+    [enabled, enable, disable, handPresent, pinching, mode, tracking],
   );
 
   return <HandControlContext.Provider value={value}>{children}</HandControlContext.Provider>;
