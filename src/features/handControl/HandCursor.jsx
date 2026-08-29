@@ -19,11 +19,12 @@ const BLUE = "#006AFF";
 const RED = "#FE5E58";
 
 export default function HandCursor() {
-  const { videoRef, landmarksRef, pointerRef, isRunning, handPresent, pinching, mode, delegate } =
+  const { videoRef, landmarksRef, pointerRef, statsRef, isRunning, handPresent, pinching, mode, delegate } =
     useHandControl();
 
   const canvasRef = useRef(null);
   const cursorRef = useRef(null);
+  const readoutRef = useRef(null);
   const pinchingRef = useRef(pinching);
   pinchingRef.current = pinching;
 
@@ -56,16 +57,26 @@ export default function HandCursor() {
           const px = (point) => [point.x * canvas.width, point.y * canvas.height];
           const scale = canvas.width / 640; // keep strokes even on other resolutions
 
-          ctx.lineWidth = 3 * scale;
-          ctx.strokeStyle = pinchingRef.current ? RED : "rgba(255,255,255,0.9)";
-          ctx.beginPath();
-          HAND_CONNECTIONS.forEach(([from, to]) => {
-            const [x1, y1] = px(landmarks[from]);
-            const [x2, y2] = px(landmarks[to]);
-            ctx.moveTo(x1, y1);
-            ctx.lineTo(x2, y2);
-          });
-          ctx.stroke();
+          // A dark halo under each bone, so the skeleton stays legible over a
+          // bright or busy background.
+          const bones = () => {
+            ctx.beginPath();
+            HAND_CONNECTIONS.forEach(([from, to]) => {
+              const [x1, y1] = px(landmarks[from]);
+              const [x2, y2] = px(landmarks[to]);
+              ctx.moveTo(x1, y1);
+              ctx.lineTo(x2, y2);
+            });
+            ctx.stroke();
+          };
+
+          ctx.lineCap = "round";
+          ctx.lineWidth = 7 * scale;
+          ctx.strokeStyle = "rgba(0,0,0,0.45)";
+          bones();
+          ctx.lineWidth = 3.5 * scale;
+          ctx.strokeStyle = pinchingRef.current ? RED : "#ffffff";
+          bones();
 
           landmarks.forEach((point, i) => {
             const [x, y] = px(point);
@@ -73,11 +84,26 @@ export default function HandCursor() {
             // cursor, so it is coloured to match.
             const isTip = i === 4 || i === 8 || i === 12 || i === 16 || i === 20;
             ctx.beginPath();
-            ctx.arc(x, y, (isTip ? 5 : 3) * scale, 0, Math.PI * 2);
+            ctx.arc(x, y, (isTip ? 6 : 3.5) * scale, 0, Math.PI * 2);
             ctx.fillStyle = i === 8 ? BLUE : pinchingRef.current ? RED : "#ffffff";
             ctx.fill();
+            ctx.lineWidth = 1.5 * scale;
+            ctx.strokeStyle = "rgba(0,0,0,0.5)";
+            ctx.stroke();
           });
         }
+      }
+
+      // --- live readout, so a silent failure is never invisible ---
+      const readout = readoutRef.current;
+      const stats = statsRef?.current;
+      if (readout && stats) {
+        const text = landmarks
+          ? `${stats.delegate ?? ""} ${stats.fps}fps · tracking`
+          : stats.inferences > 0
+            ? `${stats.delegate ?? ""} ${stats.fps}fps · no hand`
+            : "starting…";
+        if (readout.textContent !== text) readout.textContent = text;
       }
 
       // --- page cursor ---
@@ -97,13 +123,13 @@ export default function HandCursor() {
 
     frame = requestAnimationFrame(draw);
     return () => cancelAnimationFrame(frame);
-  }, [isRunning, videoRef, landmarksRef, pointerRef]);
+  }, [isRunning, videoRef, landmarksRef, pointerRef, statsRef]);
 
   return (
     <>
       {/* Camera preview. Mirrored, so moving your hand right moves the cursor right. */}
       <div
-        className={`fixed bottom-20 left-4 z-[60] w-[136px] overflow-hidden rounded-xl border-2 border-white bg-black shadow-xl transition-opacity sm:left-5 sm:w-[176px] ${
+        className={`fixed bottom-20 left-4 z-[60] w-[168px] overflow-hidden rounded-xl border-2 border-white bg-black shadow-xl transition-opacity sm:left-5 sm:w-[224px] ${
           isRunning ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
       >
@@ -123,12 +149,20 @@ export default function HandCursor() {
           <span className="absolute bottom-1 left-1 rounded bg-black/70 px-1.5 py-0.5 text-[10px] font-bold uppercase leading-tight text-white">
             {handPresent ? mode : "show your hand"}
           </span>
-          {delegate === "CPU" ? (
-            <span
-              title="Running on CPU — your browser could not provide a WebGL context, so tracking is slower."
-              className="absolute right-1 top-1 rounded bg-black/70 px-1.5 py-0.5 text-[10px] font-bold text-white"
-            >
-              CPU
+          {/* Written imperatively by the loop above — tells you whether inference
+              is actually running, and on which delegate. */}
+          <span
+            ref={readoutRef}
+            title={
+              delegate === "CPU"
+                ? "Running on the CPU delegate — your browser could not provide a working WebGL context."
+                : undefined
+            }
+            className="absolute right-1 top-1 rounded bg-black/70 px-1.5 py-0.5 font-mono text-[9px] leading-tight text-white/90"
+          />
+          {!handPresent ? (
+            <span className="absolute bottom-1 right-1 rounded bg-black/70 px-1.5 py-0.5 text-[9px] leading-tight text-white/80">
+              whole hand in frame
             </span>
           ) : null}
         </div>
