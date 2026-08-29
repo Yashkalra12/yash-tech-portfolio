@@ -117,7 +117,7 @@ Outside of code Yash is a hybrid athlete, splitting training between lifting and
 
 ### This portfolio
 
-This site is built with Vite, React and Tailwind CSS. Its UI is a tribute to Avi Vashishta's Portfolio2021 layout. It ships three things most portfolios do not: a retrieval-augmented terminal that answers questions about Yash from a local knowledge base, an llms.txt endpoint so language-model crawlers can read Yash's profile as structured text, and optional webcam hand-tracking that lets you scroll and click with gestures.
+This site is built with Vite, React and Tailwind CSS. It ships three things most portfolios do not: a retrieval-augmented terminal that answers questions about Yash from a local knowledge base, an llms.txt endpoint so language-model crawlers can read Yash's profile as structured text, and optional webcam hand-tracking that lets you scroll and click with gestures.
 
 ## Contact
 
