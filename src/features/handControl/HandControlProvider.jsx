@@ -188,6 +188,7 @@ export function HandControlProvider({ children }) {
       isRunning: tracking.isRunning,
       videoRef: tracking.videoRef,
       landmarksRef: tracking.landmarksRef,
+      statsRef: tracking.statsRef,
     }),
     [enabled, enable, disable, handPresent, pinching, mode, tracking],
   );
