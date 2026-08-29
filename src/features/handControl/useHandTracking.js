@@ -6,15 +6,26 @@
  * upward and deliberately knows nothing about scrolling or clicking — that
  * mapping lives in HandControlProvider.
  *
- * Two things this has to get right to work everywhere:
+ * Three things this has to get right to work everywhere:
  *
- *   1. The GPU delegate is not always available. Chrome with hardware
- *      acceleration disabled, and plenty of mobile browsers, fail inside
+ *   1. The GPU delegate is not always usable. Chrome with hardware acceleration
+ *      disabled, and plenty of mobile browsers, fail inside
  *      emscripten_webgl_create_context() with a "kGpuService ... was not
- *      provided" graph error. So we try GPU and fall back to CPU.
- *   2. getUserMedia only exists in a secure context. Over plain http on a
- *      phone (hitting a laptop's LAN IP, say) it is simply undefined, which
- *      deserves a better message than "cannot read property getUserMedia".
+ *      provided" graph error.
+ *
+ *      Crucially, that failure is often *not* a thrown exception: the graph is
+ *      built fine, the error is logged from wasm, and detectForVideo then
+ *      quietly returns an empty result on every single frame. So the fallback
+ *      cannot rely on catching anything — instead we watch for "the delegate has
+ *      produced no detection at all in the first few seconds" and rebuild on
+ *      CPU. That is the case that made this feature look like the camera worked
+ *      but tracking did nothing.
+ *
+ *   2. getUserMedia only exists in a secure context. Over plain http on a phone
+ *      (hitting a laptop's LAN IP, say) it is simply undefined.
+ *
+ *   3. iOS Safari needs metadata before play(), and rejects over-specified
+ *      video constraints.
  *
  * Landmark indices (MediaPipe hand model):
  *   0 wrist · 4 thumb tip · 8 index tip · 12 middle tip · 16 ring tip · 20 pinky tip
@@ -23,7 +34,13 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-const WASM_PATH = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm";
+/**
+ * Served from our own origin, copied out of the installed package by
+ * `scripts/copy-mediapipe-wasm.mjs`. Loading these from a CDN pins a version
+ * independently of the JS glue we import, and a mismatch there produces a graph
+ * that builds happily and then never detects anything.
+ */
+const WASM_PATH = `${import.meta.env.BASE_URL}mediapipe/wasm`;
 const MODEL_URL =
   "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task";
 
@@ -36,6 +53,12 @@ const PINCH_OFF = 0.5;
 const DETECT_INTERVAL_MS = 40;
 /** Failing frames in a row before we assume the delegate is broken and rebuild. */
 const MAX_FRAME_ERRORS = 12;
+/**
+ * How long the GPU delegate gets to produce its first detection before we assume
+ * its graph is silently dead and switch to CPU. Long enough for the visitor to
+ * get a hand into frame, short enough not to feel broken.
+ */
+const GPU_PROBE_MS = 2500;
 
 /** Bone pairs for drawing the hand skeleton. Mirrors MediaPipe's HAND_CONNECTIONS. */
 export const HAND_CONNECTIONS = [
@@ -47,18 +70,29 @@ export const HAND_CONNECTIONS = [
   [5, 9], [9, 13], [13, 17], [0, 17], // palm
 ];
 
+/** Model options shared by both delegates. */
+const MODEL_OPTIONS = {
+  runningMode: "VIDEO",
+  numHands: 1,
+  // Deliberately permissive. The defaults (0.5) drop a lot of real hands in the
+  // dim, off-angle, half-cropped conditions of an actual laptop webcam, and a
+  // jittery skeleton is far better feedback than no skeleton.
+  minHandDetectionConfidence: 0.3,
+  minHandPresenceConfidence: 0.3,
+  minTrackingConfidence: 0.3,
+};
+
 const dist = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
 
 /**
  * Can this browser actually give out a WebGL2 context?
  *
- * The GPU delegate needs one. When it cannot get one, the failure surfaces from
- * deep inside the wasm graph as `emscripten_webgl_create_context() returned
- * error 0` — so probing here lets us pick CPU up front instead of relying on
- * that error being thrown cleanly. Chrome with hardware acceleration turned off
- * and several mobile browsers land in this branch.
+ * A cheap pre-filter for the GPU delegate. It is necessary but not sufficient —
+ * MediaPipe creates its own context inside wasm and can fail even when this
+ * passes, which is what the GPU_PROBE_MS watchdog below is for.
  */
 function canUseGpu() {
+  if (new URLSearchParams(window.location.search).has("handcpu")) return false; // debug override
   try {
     const canvas = document.createElement("canvas");
     const gl = canvas.getContext("webgl2");
@@ -121,6 +155,11 @@ export default function useHandTracking({ onGesture, onError }) {
   const landmarksRef = useRef(null);
   /** `status` readable immediately after awaiting start(), before React re-renders. */
   const statusRef = useRef("idle");
+  /**
+   * Live counters for the on-screen readout. Written every frame, so they live in
+   * a ref — the preview reads them from its own animation frame.
+   */
+  const statsRef = useRef({ inferences: 0, detections: 0, fps: 0, delegate: null });
 
   const landmarkerRef = useRef(null);
   const streamRef = useRef(null);
@@ -129,10 +168,14 @@ export default function useHandTracking({ onGesture, onError }) {
   const lastDetectAtRef = useRef(0);
   const pinchingRef = useRef(false);
   const runningRef = useRef(false);
-  /** Consecutive failing frames, used to detect a delegate that "started" but cannot run. */
+  /** Consecutive failing frames, used to detect a delegate that throws every frame. */
   const frameErrorsRef = useRef(0);
   const delegateRef = useRef(null);
   const rebuildRef = useRef(null);
+  const startedAtRef = useRef(0);
+  /** Set once the GPU watchdog has fired, so it never fires twice. */
+  const gpuGaveUpRef = useRef(false);
+  const fpsWindowRef = useRef({ at: 0, count: 0 });
 
   // Keep the latest callbacks without restarting the camera when they change.
   const onGestureRef = useRef(onGesture);
@@ -165,102 +208,93 @@ export default function useHandTracking({ onGesture, onError }) {
     frameErrorsRef.current = 0;
     delegateRef.current = null;
     rebuildRef.current = null;
+    gpuGaveUpRef.current = false;
+    startedAtRef.current = 0;
+    statsRef.current = { inferences: 0, detections: 0, fps: 0, delegate: null };
     setStatus("idle");
     setDelegate(null);
   }, [setStatus]);
 
   const detectLoop = useCallback(() => {
     if (!runningRef.current) return;
+    rafRef.current = requestAnimationFrame(detectLoop);
+
     const video = videoRef.current;
     const landmarker = landmarkerRef.current;
+    if (!video || !landmarker || video.readyState < 2 || !video.videoWidth) return;
+
     const now = performance.now();
+    const stats = statsRef.current;
 
-    if (video && landmarker && video.readyState >= 2) {
-      // MediaPipe rejects a repeated timestamp, so only infer on new frames — and
-      // cap the rate, because on the CPU delegate a phone cannot keep up with
-      // 60 inferences a second and the whole page starts to stutter.
-      if (video.currentTime !== lastVideoTimeRef.current && now - lastDetectAtRef.current >= DETECT_INTERVAL_MS) {
-        lastVideoTimeRef.current = video.currentTime;
-        lastDetectAtRef.current = now;
-        try {
-          const result = landmarker.detectForVideo(video, now);
-          const landmarks = result?.landmarks?.[0];
-          frameErrorsRef.current = 0;
-
-          if (landmarks) {
-            landmarksRef.current = landmarks;
-            const gesture = readGesture(landmarks);
-            const wasPinching = pinchingRef.current;
-            const pinching = wasPinching
-              ? gesture.pinchDistance < PINCH_OFF
-              : gesture.pinchDistance < PINCH_ON;
-            pinchingRef.current = pinching;
-
-            onGestureRef.current?.({
-              ...gesture,
-              present: true,
-              pinching,
-              pinchStarted: pinching && !wasPinching,
-              pinchEnded: !pinching && wasPinching,
-            });
-          } else {
-            landmarksRef.current = null;
-            pinchingRef.current = false;
-            onGestureRef.current?.({ present: false });
-          }
-        } catch (err) {
-          // A single bad frame should not kill the session.
-          if (import.meta.env.DEV) console.warn("[hand] frame failed", err);
-          frameErrorsRef.current += 1;
-          // A GPU graph can be built successfully and then fail on every frame
-          // (the "kGpuService was not provided" case). If nothing is working,
-          // rebuild once on the CPU delegate rather than spinning forever.
-          if (frameErrorsRef.current === MAX_FRAME_ERRORS && delegateRef.current === "GPU") {
-            frameErrorsRef.current = 0;
-            rebuildRef.current?.("CPU");
-          }
-        }
-      }
+    // The GPU graph can be built successfully and then never produce anything —
+    // no exception, just empty results forever. If we have run for a while with
+    // zero detections, stop trusting it and rebuild on CPU.
+    if (
+      !gpuGaveUpRef.current &&
+      delegateRef.current === "GPU" &&
+      stats.detections === 0 &&
+      now - startedAtRef.current > GPU_PROBE_MS
+    ) {
+      gpuGaveUpRef.current = true;
+      rebuildRef.current?.("CPU");
+      return;
     }
 
-    rafRef.current = requestAnimationFrame(detectLoop);
-  }, []);
+    // MediaPipe rejects a repeated timestamp, so only infer on new frames — and
+    // cap the rate, because on the CPU delegate a phone cannot keep up with
+    // 60 inferences a second and the whole page starts to stutter.
+    if (video.currentTime === lastVideoTimeRef.current) return;
+    if (now - lastDetectAtRef.current < DETECT_INTERVAL_MS) return;
+    lastVideoTimeRef.current = video.currentTime;
+    lastDetectAtRef.current = now;
 
-  /**
-   * Build the landmarker, preferring the GPU delegate and falling back to CPU.
-   *
-   * The GPU failure surfaces asynchronously from inside the wasm graph, so we
-   * cannot detect it by feature-testing WebGL up front — we have to attempt it
-   * and catch. CPU is slower but works essentially everywhere.
-   */
-  const createLandmarker = useCallback(async (vision, HandLandmarker) => {
-    const options = {
-      baseOptions: { modelAssetPath: MODEL_URL },
-      runningMode: "VIDEO",
-      numHands: 1,
-      minHandDetectionConfidence: 0.5,
-      minTrackingConfidence: 0.5,
-    };
+    try {
+      const result = landmarker.detectForVideo(video, now);
+      const landmarks = result?.landmarks?.[0];
+      frameErrorsRef.current = 0;
 
-    if (canUseGpu()) {
-      try {
-        const gpu = await HandLandmarker.createFromOptions(vision, {
-          ...options,
-          baseOptions: { ...options.baseOptions, delegate: "GPU" },
+      stats.inferences += 1;
+      const fpsWindow = fpsWindowRef.current;
+      fpsWindow.count += 1;
+      if (now - fpsWindow.at >= 1000) {
+        stats.fps = Math.round((fpsWindow.count * 1000) / (now - fpsWindow.at));
+        fpsWindow.at = now;
+        fpsWindow.count = 0;
+      }
+
+      if (landmarks?.length) {
+        stats.detections += 1;
+        landmarksRef.current = landmarks;
+
+        const gesture = readGesture(landmarks);
+        const wasPinching = pinchingRef.current;
+        const pinching = wasPinching
+          ? gesture.pinchDistance < PINCH_OFF
+          : gesture.pinchDistance < PINCH_ON;
+        pinchingRef.current = pinching;
+
+        onGestureRef.current?.({
+          ...gesture,
+          present: true,
+          pinching,
+          pinchStarted: pinching && !wasPinching,
+          pinchEnded: !pinching && wasPinching,
         });
-        return { landmarker: gpu, delegate: "GPU" };
-      } catch (gpuError) {
-        if (import.meta.env.DEV) {
-          console.warn("[hand] GPU delegate failed, falling back to CPU:", gpuError);
-        }
+      } else {
+        landmarksRef.current = null;
+        pinchingRef.current = false;
+        onGestureRef.current?.({ present: false });
+      }
+    } catch (err) {
+      frameErrorsRef.current += 1;
+      // Log the first few unconditionally: if tracking is dead in production
+      // this is the only clue anyone will have.
+      if (frameErrorsRef.current <= 3) console.warn("[hand] inference failed", err);
+      if (frameErrorsRef.current >= MAX_FRAME_ERRORS && !gpuGaveUpRef.current) {
+        gpuGaveUpRef.current = true;
+        rebuildRef.current?.("CPU");
       }
     }
-
-    const cpu = await HandLandmarker.createFromOptions(vision, {
-      ...options,
-      baseOptions: { ...options.baseOptions, delegate: "CPU" },
-    });
-    return { landmarker: cpu, delegate: "CPU" };
   }, []);
 
   const start = useCallback(async () => {
@@ -283,19 +317,30 @@ export default function useHandTracking({ onGesture, onError }) {
       // the majority of visitors who never turn this on.
       const { FilesetResolver, HandLandmarker } = await import("@mediapipe/tasks-vision");
       const vision = await FilesetResolver.forVisionTasks(WASM_PATH);
-      const { landmarker, delegate: used } = await createLandmarker(vision, HandLandmarker);
+
+      const build = (which) =>
+        HandLandmarker.createFromOptions(vision, {
+          ...MODEL_OPTIONS,
+          baseOptions: { modelAssetPath: MODEL_URL, delegate: which },
+        });
+
+      let landmarker = null;
+      let used = "CPU";
+      if (canUseGpu()) {
+        try {
+          landmarker = await build("GPU");
+          used = "GPU";
+        } catch (gpuError) {
+          console.warn("[hand] GPU delegate failed to build, using CPU:", gpuError);
+        }
+      }
+      if (!landmarker) landmarker = await build("CPU");
 
       // Lets the detection loop swap delegates without re-requesting the camera.
       rebuildRef.current = async (which) => {
-        if (import.meta.env.DEV) console.warn(`[hand] rebuilding landmarker on ${which}`);
+        console.warn(`[hand] switching to the ${which} delegate`);
         try {
-          const replacement = await HandLandmarker.createFromOptions(vision, {
-            baseOptions: { modelAssetPath: MODEL_URL, delegate: which },
-            runningMode: "VIDEO",
-            numHands: 1,
-            minHandDetectionConfidence: 0.5,
-            minTrackingConfidence: 0.5,
-          });
+          const replacement = await build(which);
           if (!runningRef.current) {
             replacement.close?.();
             return;
@@ -303,10 +348,13 @@ export default function useHandTracking({ onGesture, onError }) {
           landmarkerRef.current?.close?.();
           landmarkerRef.current = replacement;
           delegateRef.current = which;
+          statsRef.current.delegate = which;
           lastVideoTimeRef.current = -1;
+          frameErrorsRef.current = 0;
+          startedAtRef.current = performance.now();
           setDelegate(which);
         } catch (err) {
-          if (import.meta.env.DEV) console.warn("[hand] rebuild failed", err);
+          console.warn("[hand] delegate switch failed", err);
         }
       };
 
@@ -333,6 +381,10 @@ export default function useHandTracking({ onGesture, onError }) {
       // play() before then can reject. Wait for dimensions, then play.
       if (video.readyState < 1) {
         await new Promise((resolve, reject) => {
+          const cleanup = () => {
+            video.removeEventListener("loadedmetadata", onLoaded);
+            video.removeEventListener("error", onFail);
+          };
           const onLoaded = () => {
             cleanup();
             resolve();
@@ -340,10 +392,6 @@ export default function useHandTracking({ onGesture, onError }) {
           const onFail = () => {
             cleanup();
             reject(new Error("The camera stream could not be read."));
-          };
-          const cleanup = () => {
-            video.removeEventListener("loadedmetadata", onLoaded);
-            video.removeEventListener("error", onFail);
           };
           video.addEventListener("loadedmetadata", onLoaded);
           video.addEventListener("error", onFail);
@@ -354,7 +402,11 @@ export default function useHandTracking({ onGesture, onError }) {
 
       runningRef.current = true;
       frameErrorsRef.current = 0;
+      gpuGaveUpRef.current = false;
       delegateRef.current = used;
+      startedAtRef.current = performance.now();
+      fpsWindowRef.current = { at: performance.now(), count: 0 };
+      statsRef.current = { inferences: 0, detections: 0, fps: 0, delegate: used };
       setDelegate(used);
       setStatus("running");
       rafRef.current = requestAnimationFrame(detectLoop);
@@ -376,7 +428,7 @@ export default function useHandTracking({ onGesture, onError }) {
       setStatus("error");
       onErrorRef.current?.(wrapped);
     }
-  }, [createLandmarker, detectLoop, setStatus, stop]);
+  }, [detectLoop, setStatus, stop]);
 
   // Never leave the camera light on after unmount.
   useEffect(() => stop, [stop]);
@@ -385,6 +437,7 @@ export default function useHandTracking({ onGesture, onError }) {
     videoRef,
     landmarksRef,
     statusRef,
+    statsRef,
     status,
     error,
     delegate,
