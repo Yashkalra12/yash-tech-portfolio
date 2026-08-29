@@ -1,0 +1,132 @@
+# Yash Kalra
+
+> Full Stack Developer — CS Grad @ Chitkara · Full Stack + AI
+
+Hey there! I am Yash Kalra — a full stack developer who builds end-to-end AI-powered applications. I thrive in fast-paced teams and love shipping products that actually get used.
+
+## At a glance
+
+- **Name**: Yash Kalra
+- **Role**: Full Stack Developer
+- **Location**: Lucknow / Chandigarh, India
+- **Availability**: Open to relocate worldwide · Remote ready
+- **Currently learning**: LLM Application Integrations, LangChain, Retrieval-Augmented Generation
+- **Resume**: https://drive.google.com/file/d/19yrsgZsfgshgKRE0WSf7S-SuHAEyXJxM/view?usp=sharing
+
+## About
+
+A driven full stack developer, everyday learner and hybrid athlete. I craft end-to-end AI-powered products, from the API layer up to the pixels.
+
+Over the last two years I have shipped 5+ production applications for US-based clients — AI stock-market analysers, document validation pipelines, and desktop software reborn as web apps.
+
+I am open to relocating anywhere in the world, and equally happy fully remote.
+
+## Experience
+
+### Full Stack Developer — Munshot PTE Ltd (Feb 2025 – Jan 2026)
+
+- Engineered an AI-based stock market analyser, developing and testing the core APIs behind it.
+- Built the Analyst Agents screen from scratch, integrating 10+ APIs end to end — design through functionality.
+- Shipped a Stocks Portfolio panel with toggle behaviour and Redux-backed stock listing, wired into existing screens.
+
+More about the company: https://www.linkedin.com/company/munshot/about/
+
+### Software Engineer — Lumio AI (Sep 2024 – Feb 2025)
+
+- Built and deployed 5+ projects from scratch using React, Angular, Next.js and FastAPI.
+- Integrated AI APIs and built the frontends for applications used by US-based clients.
+- Ported desktop software to the web with Three.js, testing features with Pytest.
+- Developed a flagging system in a monorepo that validated thousands of PDFs against ground-truth JSON, improving accuracy by 80%.
+
+More about the company: https://www.teamlumio.ai/
+
+## Projects
+
+### GigNest
+
+GigNest connects skilled freelancers with clients looking for top-notch services — a seamless marketplace for freelancers to showcase their talent and for clients to find experts.
+
+- **Stack**: React, Zustand, Tailwind CSS, MUI, Node.js, Express.js, MongoDB
+- **Live**: https://gig-nest.vercel.app/
+- **Source**: https://github.com/Yashkalra12/GigNest
+
+### eVoting Platform
+
+An advanced eVoting system on the MERN stack that reimagines the voting process around accessibility, transparency and security for every voter.
+
+- **Stack**: React, Tailwind CSS, Node.js, Express.js, MongoDB
+- **Live**: https://evoting-mern-frontend.vercel.app/
+- **Source**: https://github.com/Yashkalra12/Evoting-mern
+
+### HealthSync
+
+HealthSync gives patients and doctors one shared surface: browse available doctors, manage your profile and submit queries, all behind a proper auth flow.
+
+- **Stack**: React, Redux, Tailwind CSS, JavaScript, Node.js, Express.js, MongoDB
+- **Live**: https://health-sync-rose.vercel.app/
+- **Source**: https://github.com/Yashkalra12/HealthSync
+
+## Skills
+
+- **Front End**: React, Next.js, Angular, Tailwind CSS
+- **Back End**: Node.js, Express, FastAPI, Django
+- **AI / LLM**: LangChain, RAG, OpenAI & Claude APIs
+- **Languages**: JavaScript, TypeScript, Python, C++
+- **Data & Infra**: MongoDB, SQL, Redux, Zustand, Git
+
+Full list: HTML, CSS, Tailwind CSS, JavaScript, TypeScript, Python, React, React Query, Redux, Zustand, Node.js, Express.js, Django, MongoDB, SQL, Postman, Git, GitHub.
+
+## Education
+
+### Chitkara University Institute of Engineering and Technology
+
+- **Degree**: B.E. Computer Science and Engineering
+- **Dates**: Oct 2021 – Jul 2025
+- **Grade**: 9.26 CGPA
+- **Place**: Punjab, India
+
+Coursework across Data Structures, Algorithms, OOP, DBMS, Operating Systems and Computer Networks.
+
+### City International School
+
+- **Degree**: Class 12 — Science with Computer Science
+- **Dates**: Apr 2019 – Mar 2021
+- **Grade**: 91.6%
+- **Place**: Lucknow, India
+
+### La Martiniere College
+
+- **Degree**: Class 10 — ICSE
+- **Dates**: Apr 2015 – Mar 2019
+- **Grade**: 94.6%
+- **Place**: Lucknow, India
+
+## More
+
+### Availability
+
+Yash is open to full-time Full Stack, Frontend and AI Engineer roles. He is open to relocating anywhere in the world and is equally comfortable working fully remote.
+
+### Working style
+
+Yash prefers owning features end to end — API design, state management and UI — and has consistently been the person who takes a screen from empty file to shipped.
+
+### Interests
+
+Outside of code Yash is a hybrid athlete, splitting training between lifting and endurance work. He is an everyday learner and currently going deep on LLM application integration, LangChain and retrieval-augmented generation.
+
+### This portfolio
+
+This site is built with Vite, React and Tailwind CSS. Its UI is a tribute to Avi Vashishta's Portfolio2021 layout. It ships three things most portfolios do not: a retrieval-augmented terminal that answers questions about Yash from a local knowledge base, an llms.txt endpoint so language-model crawlers can read Yash's profile as structured text, and optional webcam hand-tracking that lets you scroll and click with gestures.
+
+## Contact
+
+- **LinkedIn**: /in/yashkalra12 — https://www.linkedin.com/in/yashkalra12/
+- **GitHub**: @Yashkalra12 — https://github.com/Yashkalra12
+- **LeetCode**: @yashkalra12 — https://leetcode.com/u/yashkalra12/
+- **Email**: yashkalra2013@gmail.com — mailto:yashkalra2013@gmail.com
+- **WhatsApp**: +91 91180 79005 — https://wa.me/919118079005?text=Hey%20Yash!%20I%20came%20here%20from%20your%20portfolio
+
+---
+
+Generated from src/data/profile.js on 2026-08-29. Do not edit by hand.
