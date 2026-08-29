@@ -4,8 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "predev": "npm run mediapipe",
     "dev": "vite",
     "llms": "node scripts/generate-llms-txt.mjs",
+    "mediapipe": "node scripts/copy-mediapipe-wasm.mjs",
+    "prebuild": "npm run mediapipe",
     "build": "npm run llms && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
