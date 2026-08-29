@@ -1,8 +1,8 @@
 /*
  * Styles for the rebuilt portfolio.
  *
- * Layout and colour follow AVIVASHISHTA29/Portfolio2021: white ground, one
- * strong blue accent, and handwritten annotations in the margins. Most of the
+ * The design language: white ground, one strong blue accent, and handwritten
+ * annotations in the margins. Most of the
  * work is done in Tailwind classes; what lives here is the stuff Tailwind
  * cannot express — the CSS `content` job-title carousel, the timed reveal of
  * the intro copy, and the tilt-on-hover mockups.
@@ -160,18 +160,31 @@
 }
 
 /* --- Nav ------------------------------------------------------------------- */
-.nav-link {
-  padding: 0.5rem 0.75rem;
-  border-radius: 10px;
+/* --- Dynamic island nav ----------------------------------------------------
+ * Links inside the black pill. Sized tight so all five still fit on one line at
+ * 360px wide — wrapping would turn the stadium shape into a blob.
+ */
+.island-link {
+  padding: 0.375rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
   font-weight: 600;
-  color: #6b7280;
+  color: rgba(255, 255, 255, 0.75);
   cursor: pointer;
-  transition: 0.25s;
+  transition: 0.2s;
 }
 
-.nav-link:hover {
-  background: #f2f2f2;
-  color: #000;
+@media (min-width: 640px) {
+  .island-link {
+    padding: 0.375rem 0.625rem;
+    font-size: 0.875rem;
+  }
+}
+
+.island-link:hover,
+.island-link:focus-visible {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
 }
 
 /* --- Draggable skill cards -------------------------------------------------
