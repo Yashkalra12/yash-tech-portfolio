@@ -43,6 +43,9 @@ export default function PermissionGate() {
   }, [open]);
 
   const busy = status === "loading";
+  // getUserMedia simply does not exist outside a secure context, so say so before
+  // the visitor clicks — this is what bites when testing from a phone on a LAN IP.
+  const insecure = typeof window !== "undefined" && !window.isSecureContext;
 
   return (
     <>
@@ -114,6 +117,13 @@ export default function PermissionGate() {
                 the corner.
               </p>
 
+              {insecure ? (
+                <p className="mt-4 rounded-lg bg-amber-50 p-3 text-sm text-amber-800">
+                  This page is not on a secure origin, so the browser will not hand over the
+                  camera. Open it over <strong>https://</strong> or on <strong>localhost</strong>.
+                </p>
+              ) : null}
+
               {error ? (
                 <p className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">
                   {error.message}
@@ -125,8 +135,8 @@ export default function PermissionGate() {
                   type="button"
                   disabled={busy}
                   onClick={async () => {
-                    await enable();
-                    setOpen(false);
+                    // Keep the explainer open on failure so the error is readable.
+                    if (await enable()) setOpen(false);
                   }}
                   className="rounded-full bg-[#006AFF] px-5 py-2.5 text-sm font-bold text-white shadow-[0_3px_5px_#006AFF] transition hover:scale-105 disabled:opacity-60"
                 >
