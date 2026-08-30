@@ -10,7 +10,7 @@ export default {
         "y-180": "rotateY(180deg)",
       },
       colors: {
-        // The reference design's single accent colour.
+        // The one accent colour the whole page leans on.
         brand: "#006AFF",
         // Kept for the legacy dark portfolio at /legacy.
         background: "#CBACF9",
