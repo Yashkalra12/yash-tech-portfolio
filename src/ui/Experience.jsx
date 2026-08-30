@@ -1,6 +1,6 @@
 /**
- * Work history. The reference has no equivalent section, so this borrows its
- * vocabulary instead: mac windows, one accent colour, a handwritten aside.
+ * Work history, in the same vocabulary as the rest of the page: mac windows, one
+ * accent colour, a handwritten aside.
  */
 
 import { FaExternalLinkAlt } from "react-icons/fa";
