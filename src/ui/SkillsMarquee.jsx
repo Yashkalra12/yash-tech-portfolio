@@ -1,16 +1,15 @@
 /**
- * Two rows of technology tiles that slide past each other as you scroll — the
- * reference's `HorizontalSkills`, rebuilt.
+ * Two rows of technology tiles that slide past each other as you scroll.
  *
- * Two departures from the original, both deliberate:
+ * Two decisions worth stating:
  *
  *   1. It animates a transform rather than `scrollLeft`. Scrolling a real
  *      overflow container fights the browser's scroll anchoring, and on iOS a
  *      programmatically scrolled element can steal the page's touch gestures.
  *   2. The tile list is rendered twice and the track never travels further than one
  *      list length, so there is always a second copy filling the space the first
- *      one vacates. No wrap logic at all, where the original has to detect the ends
- *      and jump `scrollLeft` back.
+ *      one vacates. That removes wrap logic entirely — nothing has to detect an
+ *      end and jump the offset back.
  *
  * The rows move in opposite directions, which is what makes this read as motion
  * rather than as a list that happens to be sliding.
