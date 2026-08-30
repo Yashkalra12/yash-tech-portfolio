@@ -24,29 +24,27 @@
  * cycles through roles with no JS at all. Kept, with Yash's roles.
  */
 .rotating-role::after {
-  content: "Full Stack Developer";
+  content: "Everyday Learner";
   color: var(--blue);
   animation: roleCycle 12s infinite;
 }
 
+/* Keep these four in step with `identity.roles` in src/data/profile.js — the
+ * data file is what the RAG terminal and llms.txt read, this is what animates. */
 @keyframes roleCycle {
   0%,
-  18% {
-    content: "Full Stack Developer";
-  }
-  20%,
-  38% {
-    content: "React Engineer";
-  }
-  40%,
-  58% {
-    content: "AI App Builder";
-  }
-  60%,
-  78% {
+  23% {
     content: "Everyday Learner";
   }
-  80%,
+  25%,
+  48% {
+    content: "Full Stack Developer";
+  }
+  50%,
+  73% {
+    content: "AI Engineer";
+  }
+  75%,
   98% {
     content: "Hybrid Athlete";
   }
