@@ -17,7 +17,9 @@ export default function Education() {
           <li key={edu.id} className="relative">
             <span
               aria-hidden
-              className="absolute -left-[1.95rem] top-5 h-3 w-3 rounded-full border-2 border-white bg-[#7e38e0] md:-left-[3.2rem]"
+              // The ring is the page colour, so the dot reads as sitting on top of
+              // the timeline rule in either theme.
+              className="absolute -left-[1.95rem] top-5 h-3 w-3 rounded-full border-2 border-[color:var(--page)] bg-[#7e38e0] md:-left-[3.2rem]"
             />
             <div className="tilt-hover rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
               <div className="flex items-start gap-4">
