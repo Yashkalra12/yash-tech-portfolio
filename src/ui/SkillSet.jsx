@@ -1,9 +1,9 @@
 /**
  * "Variable Skill Set" — the scrolling technology marquee, plus the draggable
- * grouped list from the reference.
+ * grouped list underneath it.
  *
- * The marquee replaced a static grid of the same eighteen logos: showing both was
- * the same information twice, and the grid was the weaker of the two.
+ * The marquee replaced a static grid of the same logos: showing both was the same
+ * information twice, and the grid was the weaker of the two.
  */
 
 import { useState } from "react";
