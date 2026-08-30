@@ -2,26 +2,28 @@
 
 > Full Stack AI Engineer — CS Grad @ Chitkara · Full Stack + AI
 
-I build AI products end to end — retrieval pipelines, APIs, and the interfaces on top.
+I build AI products end to end. Retrieval pipelines, APIs, and the interfaces on top.
 
 ## At a glance
 
 - **Name**: Yash Kalra
 - **Role**: Full Stack AI Engineer
-- **Location**: Lucknow / Chandigarh, India
+- **Location**: Lucknow, India
 - **Availability**: Open to relocate worldwide · Remote ready
 - **Currently learning**: Agentic Workflows, LangGraph, Retrieval-Augmented Generation, Cloud Architecture
 - **Resume**: https://drive.google.com/file/d/19yrsgZsfgshgKRE0WSf7S-SuHAEyXJxM/view?usp=sharing
 
 ## About
 
-I am a full stack engineer who works across the whole line: the data and retrieval layer, the services in the middle, and the interface a person actually touches. Most of what I build now has a language model somewhere inside it, which means the interesting problems are rarely the model — they are ingestion, grounding, latency and state.
+I work across the whole stack: the data and retrieval layer, the services in the middle, and the screen someone actually uses. Most of what I build now has a language model in it somewhere, and the hard parts are almost never the model. They are ingestion, grounding, latency and state.
 
-As a founding engineer at Munshot I built a financial research product from an empty repository: React and TypeScript on the front, FastAPI and NestJS behind it, RAG over PDFs, filings and spreadsheets on Pinecone, and LangGraph agents streaming their answers back token by token. At Genpact I work the other side of the same coin — keeping production BPM workflows healthy on Azure, where a bug has a queue of real users behind it.
+At Munshot I was the founding engineer on a financial research product and built it from an empty repository. React and TypeScript on the front, FastAPI and NestJS behind it, RAG over PDFs, filings and spreadsheets on Pinecone, and LangGraph agents that stream their answers back as they work.
 
-Before that, at Lumio AI, I shipped five production applications for US-based clients and built a validation pipeline that checked thousands of PDFs against ground truth and lifted accuracy by 80%.
+At Genpact I keep production BPM workflows running on Azure. Different job, same instinct: read the logs, find the real cause, ship the fix, tell the person who raised it what happened.
 
-I care about work that ships and stays shipped. Outside the editor I train as a hybrid athlete, which is roughly the same discipline applied to a different system.
+Before that I was at Lumio AI, where I shipped five production apps for US clients and built a validation pipeline that checked thousands of PDFs against ground truth and pushed accuracy up by 80%.
+
+I like work that ships and then keeps working. Away from the keyboard I train as a hybrid athlete: lifting and endurance, most days of the week.
 
 ## Experience
 
@@ -35,7 +37,7 @@ Part-time · Singapore · Remote
 - Implemented document ingestion and RAG pipelines for PDF, DOCX, PPTX, XLSX, CSV, and text files using parsing, chunking, embeddings, metadata filtering, and Pinecone vector search to support retrieval over financial documents.
 - Built AI-agent features with LangGraph, LLM tool calling, streaming SSE/NDJSON responses, market-data and SEC/EDGAR integrations, and Yjs/WebSockets for real-time collaborative spreadsheet editing.
 
-More about the company: https://www.linkedin.com/company/munshot/about/
+More about the company: https://muns.ai/
 
 ### Software Developer — Genpact (Sep 2025 – Present · 1 yr)
 
