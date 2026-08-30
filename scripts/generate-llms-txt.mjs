@@ -33,7 +33,7 @@ const li = (items) => out.push(...items.map((i) => `- ${i}`), "");
 
 h(1, identity.name);
 p(`> ${identity.tagline} — ${identity.headline}`);
-p(identity.blurb);
+p(identity.blurb.join(" "));
 
 h(2, "At a glance");
 li([
