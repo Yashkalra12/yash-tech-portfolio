@@ -7,10 +7,10 @@
  *   1. It animates a transform rather than `scrollLeft`. Scrolling a real
  *      overflow container fights the browser's scroll anchoring, and on iOS a
  *      programmatically scrolled element can steal the page's touch gestures.
- *   2. The tile list is rendered twice and travels exactly -50%, so the second
- *      copy is in the first one's place at the end of the range. That wraps
- *      seamlessly with no wrap logic at all, where the original has to detect the
- *      ends and jump `scrollLeft` back.
+ *   2. The tile list is rendered twice and the track never travels further than one
+ *      list length, so there is always a second copy filling the space the first
+ *      one vacates. No wrap logic at all, where the original has to detect the ends
+ *      and jump `scrollLeft` back.
  *
  * The rows move in opposite directions, which is what makes this read as motion
  * rather than as a list that happens to be sliding.
@@ -22,6 +22,17 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { skills } from "../data/profile";
 
 gsap.registerPlugin(ScrollTrigger);
+
+/**
+ * How far the track travels across the whole scroll range, as a percentage of the
+ * doubled track.
+ *
+ * It used to be the full 50% — one complete list length — which with thirty-odd
+ * tiles is several thousand pixels of travel over roughly one viewport of scroll,
+ * so the tiles blurred past. A shorter trip is a slower one; anything under 50%
+ * still never exposes the end of the duplicated list, so nothing has to wrap.
+ */
+const TRAVEL = 14;
 
 /** Rotate the second row so the two rows never show the same tile side by side. */
 const OFFSET = Math.ceil(skills.length / 2);
@@ -66,16 +77,18 @@ function Row({ items, reverse }) {
     // Respect a visitor who has asked the OS for less movement.
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
 
-    const from = reverse ? "-50%" : "0%";
-    const to = reverse ? "0%" : "-50%";
+    // Row two starts already displaced and travels back, so the rows pass each
+    // other in opposite directions.
+    const from = reverse ? -TRAVEL : 0;
+    const to = reverse ? 0 : -TRAVEL;
 
-    gsap.set(track, { xPercent: reverse ? -50 : 0 });
+    gsap.set(track, { xPercent: from });
 
     const tween = gsap.fromTo(
       track,
-      { xPercent: parseFloat(from) },
+      { xPercent: from },
       {
-        xPercent: parseFloat(to),
+        xPercent: to,
         ease: "none",
         scrollTrigger: {
           trigger: track,
