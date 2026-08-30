@@ -1,10 +1,12 @@
 /**
  * The rebuilt portfolio page.
  *
- * Section order mirrors the reference (intro → about → skills → projects →
- * footer), with experience and education slotted in where a graduate CV needs
- * them, and the two original features — the RAG terminal and llms.txt — given
- * their own sections before the footer.
+ * Section order: intro → about → experience → skills → projects → education,
+ * then the RAG terminal, then the footer.
+ *
+ * Nothing here navigates away from the page. Section links scroll, projects open
+ * in a dialog, and the handful of genuinely external links (LinkedIn, GitHub, the
+ * résumé) open in a new tab, so this document is never replaced.
  */
 
 import Header from "../ui/Header";
@@ -14,7 +16,6 @@ import Experience from "../ui/Experience";
 import SkillSet from "../ui/SkillSet";
 import Projects from "../ui/Projects";
 import Education from "../ui/Education";
-import LlmsSection from "../ui/LlmsSection";
 import Footer from "../ui/Footer";
 import RagTerminal from "../features/ragTerminal/RagTerminal";
 import { HandControlProvider } from "../features/handControl/HandControlProvider";
@@ -40,7 +41,6 @@ export default function Portfolio() {
         <RagTerminal />
 
         <div className="mx-auto w-[92%] max-w-[1300px]">
-          <LlmsSection />
           <Footer />
         </div>
 
