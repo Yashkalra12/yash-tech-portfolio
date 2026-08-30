@@ -34,7 +34,7 @@ function buildChunks() {
     "identity:intro",
     "About",
     "Who is Yash Kalra",
-    `${identity.name} is a ${identity.tagline} based in ${identity.location}. ${identity.blurb} He describes himself as: ${identity.roles.join(", ")}.`,
+    `${identity.name} is a ${identity.tagline} based in ${identity.location}. ${identity.blurb.join(" ")} He describes himself as: ${identity.roles.join(", ")}.`,
     ["who", "yash", "name", "intro", "introduction", "about", "bio", "summary", "hello"],
   );
 
