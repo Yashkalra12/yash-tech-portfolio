@@ -28,9 +28,14 @@ export default function Experience() {
               </div>
 
               <div className="min-w-0 flex-1">
-                <h3 className="text-xl font-bold md:text-2xl">{job.company}</h3>
+                <h3 className="font-display text-2xl md:text-3xl">{job.company}</h3>
                 <p className="font-semibold text-[#006AFF]">{job.role}</p>
-                <p className="text-sm text-slate-400">{job.duration}</p>
+                {/* Employment type, dates and place on one line — the details are
+                    worth stating, but not worth three lines of their own. Joined
+                    from whichever fields the job actually has. */}
+                <p className="mt-0.5 text-sm text-slate-400">
+                  {[job.type, job.duration, job.place].filter(Boolean).join(" · ")}
+                </p>
 
                 <ul className="mt-4 space-y-2">
                   {job.highlights.map((item) => (
