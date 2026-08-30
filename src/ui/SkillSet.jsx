@@ -17,7 +17,12 @@ export default function SkillSet() {
 
   return (
     <section id="skills" className="scroll-mt-24 py-16">
-      <SectionHeading accent="Variable" dotColor="#ff9f1c">
+      {/* Sits above the heading as a kicker — the stack below is a snapshot, and
+          this is the line that says so. */}
+      <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#ff9f1c]">
+        Always Building · Always Growing
+      </p>
+      <SectionHeading className="mt-2" accent="Variable" dotColor="#ff9f1c">
         Skill Set
       </SectionHeading>
 
