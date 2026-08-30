@@ -31,7 +31,13 @@ export default function Intro() {
         </p>
 
         <div className="reveal-late">
-          <p className="max-w-xl text-lg leading-relaxed text-slate-500">{identity.blurb}</p>
+          {/* Two lines, deliberately: the second one is the detail, and putting it
+              on its own line keeps the first one a statement. */}
+          <div className="max-w-xl text-lg leading-relaxed text-slate-500">
+            {identity.blurb.map((sentence) => (
+              <p key={sentence}>{sentence}</p>
+            ))}
+          </div>
 
           <div className="mt-6 flex flex-wrap gap-4">
             <button type="button" className="btn-primary" onClick={() => scrollToId("socials")}>
