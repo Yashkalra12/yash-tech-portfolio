@@ -13,7 +13,7 @@ export const identity = {
   // The order the hero cycles through them. Mirrored in `@keyframes roleCycle`
   // in src/styles/portfolio.css, which is what actually animates the heading.
   roles: ["Everyday Learner", "Full Stack Developer", "AI Engineer", "Hybrid Athlete"],
-  headline: "CS Grad @ Chitkara · Full Stack + AI",
+  headline: "CS Grad @ Chitkara",
   // Two lines, rendered as two lines in the hero. Joined with a space wherever the
   // blurb is needed as prose (the terminal, llms.txt).
   blurb: [
