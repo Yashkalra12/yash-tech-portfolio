@@ -17,6 +17,7 @@ import SkillSet from "../ui/SkillSet";
 import Projects from "../ui/Projects";
 import Education from "../ui/Education";
 import Footer from "../ui/Footer";
+import ThemeToggle from "../ui/ThemeToggle";
 import RagTerminal from "../features/ragTerminal/RagTerminal";
 import { HandControlProvider } from "../features/handControl/HandControlProvider";
 import HandCursor from "../features/handControl/HandCursor";
@@ -25,10 +26,19 @@ import PermissionGate from "../features/handControl/PermissionGate";
 export default function Portfolio() {
   return (
     <HandControlProvider>
-      <div className="min-h-screen bg-white text-[#101828]">
+      <div className="page-shell min-h-screen">
         <Header />
 
-        <main className="mx-auto w-[92%] max-w-[1300px] pt-24">
+        {/* Top-right controls: theme, then the camera. Below the header island on
+            phones, where the expanded island is nearly the full width. */}
+        <div className="fixed right-3 top-[4.75rem] z-[9996] flex items-center gap-2 sm:top-3">
+          <ThemeToggle />
+          <PermissionGate />
+        </div>
+
+        {/* Extra top padding on phones, where the controls sit under the island
+            rather than beside it and would otherwise land on the hero. */}
+        <main className="mx-auto w-[92%] max-w-[1300px] pt-36 sm:pt-24">
           <Intro />
           <AboutMe />
           <Experience />
@@ -45,7 +55,6 @@ export default function Portfolio() {
         </div>
 
         <HandCursor />
-        <PermissionGate />
       </div>
     </HandControlProvider>
   );
