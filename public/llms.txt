@@ -1,37 +1,56 @@
 # Yash Kalra
 
-> Full Stack Developer — CS Grad @ Chitkara · Full Stack + AI
+> Full Stack AI Engineer — CS Grad @ Chitkara · Full Stack + AI
 
-Hey there! I am Yash Kalra — a full stack developer who builds end-to-end AI-powered applications. I thrive in fast-paced teams and love shipping products that actually get used.
+I build AI products end to end — retrieval pipelines, APIs, and the interfaces on top.
 
 ## At a glance
 
 - **Name**: Yash Kalra
-- **Role**: Full Stack Developer
+- **Role**: Full Stack AI Engineer
 - **Location**: Lucknow / Chandigarh, India
 - **Availability**: Open to relocate worldwide · Remote ready
-- **Currently learning**: LLM Application Integrations, LangChain, Retrieval-Augmented Generation
+- **Currently learning**: Agentic Workflows, LangGraph, Retrieval-Augmented Generation, Cloud Architecture
 - **Resume**: https://drive.google.com/file/d/19yrsgZsfgshgKRE0WSf7S-SuHAEyXJxM/view?usp=sharing
 
 ## About
 
-A driven full stack developer, everyday learner and hybrid athlete. I craft end-to-end AI-powered products, from the API layer up to the pixels.
+I am a full stack engineer who works across the whole line: the data and retrieval layer, the services in the middle, and the interface a person actually touches. Most of what I build now has a language model somewhere inside it, which means the interesting problems are rarely the model — they are ingestion, grounding, latency and state.
 
-Over the last two years I have shipped 5+ production applications for US-based clients — AI stock-market analysers, document validation pipelines, and desktop software reborn as web apps.
+As a founding engineer at Munshot I built a financial research product from an empty repository: React and TypeScript on the front, FastAPI and NestJS behind it, RAG over PDFs, filings and spreadsheets on Pinecone, and LangGraph agents streaming their answers back token by token. At Genpact I work the other side of the same coin — keeping production BPM workflows healthy on Azure, where a bug has a queue of real users behind it.
 
-I am open to relocating anywhere in the world, and equally happy fully remote.
+Before that, at Lumio AI, I shipped five production applications for US-based clients and built a validation pipeline that checked thousands of PDFs against ground truth and lifted accuracy by 80%.
+
+I care about work that ships and stays shipped. Outside the editor I train as a hybrid athlete, which is roughly the same discipline applied to a different system.
 
 ## Experience
 
-### Full Stack Developer — Munshot PTE Ltd (Feb 2025 – Jan 2026)
+### Full Stack Founding Engineer — Munshot (Feb 2025 – Aug 2026 · 1 yr 7 mos)
 
-- Engineered an AI-based stock market analyser, developing and testing the core APIs behind it.
-- Built the Analyst Agents screen from scratch, integrating 10+ APIs end to end — design through functionality.
-- Shipped a Stocks Portfolio panel with toggle behaviour and Redux-backed stock listing, wired into existing screens.
+Part-time · Singapore · Remote
+
+- Built a React and TypeScript application for financial research, including streaming chat responses, Plotly charts, PDF/document previews, portfolio views, and spreadsheet-based analysis using Redux Toolkit and TanStack Query.
+- Developed reusable, accessible UI components with Tailwind CSS, Radix UI, and shadcn/ui; delivered responsive layouts, dark mode, file upload, document search, and export flows for PDF, Excel, PowerPoint, and CSV.
+- Built backend services with Python/FastAPI and TypeScript/NestJS, using REST APIs, JWT authentication, Pydantic and class-validator validation, Prisma, PostgreSQL, Redis, logging, and centralized error handling.
+- Implemented document ingestion and RAG pipelines for PDF, DOCX, PPTX, XLSX, CSV, and text files using parsing, chunking, embeddings, metadata filtering, and Pinecone vector search to support retrieval over financial documents.
+- Built AI-agent features with LangGraph, LLM tool calling, streaming SSE/NDJSON responses, market-data and SEC/EDGAR integrations, and Yjs/WebSockets for real-time collaborative spreadsheet editing.
 
 More about the company: https://www.linkedin.com/company/munshot/about/
 
+### Software Developer — Genpact (Sep 2025 – Present · 1 yr)
+
+Full-time · India
+
+- Provided L2 production support for Cora BPM workflow applications, investigating and resolving stuck, failed, and delayed workflow cases.
+- Closed 120+ Jira tickets with end-to-end ownership, from issue triage and root-cause analysis through resolution, user communication, validation, and closure.
+- Used C#, ASP.NET/Web APIs, and SQL Server to troubleshoot application behavior, validate data, investigate integration failures, and support workflow recovery.
+- Monitored Azure-hosted applications through Grafana dashboards, logs, and alerts identified recurring issues, escalated defects with relevant evidence, and helped improve service reliability.
+
+More about the company: https://www.genpact.com/
+
 ### Software Engineer — Lumio AI (Sep 2024 – Feb 2025)
+
+Full-time · Remote
 
 - Built and deployed 5+ projects from scratch using React, Angular, Next.js and FastAPI.
 - Integrated AI APIs and built the frontends for applications used by US-based clients.
@@ -68,13 +87,16 @@ HealthSync gives patients and doctors one shared surface: browse available docto
 
 ## Skills
 
-- **Front End**: React, Next.js, Angular, Tailwind CSS
-- **Back End**: Node.js, Express, FastAPI, Django
-- **AI / LLM**: LangChain, RAG, OpenAI & Claude APIs
-- **Languages**: JavaScript, TypeScript, Python, C++
-- **Data & Infra**: MongoDB, SQL, Redux, Zustand, Git
+- **Front End**: React, Next.js, Angular, Tailwind CSS, Redux, TanStack Query
+- **Back End**: Node.js, NestJS, Express, FastAPI, Django, ASP.NET
+- **AI / LLM**: LangChain, LangGraph, RAG, Pinecone, OpenAI & Claude APIs
+- **Languages**: TypeScript, JavaScript, Python, C#, C++, SQL
+- **Data**: PostgreSQL, MongoDB, Redis, Supabase, Prisma
+- **Cloud**: AWS — EC2, Cognito, Polly, Organizations · Azure
+- **DevOps**: CI/CD with Jenkins, SSH-based deployments, Git
+- **Observability**: Grafana, Metabase, Postman
 
-Full list: HTML, CSS, Tailwind CSS, JavaScript, TypeScript, Python, React, React Query, Redux, Zustand, Node.js, Express.js, Django, MongoDB, SQL, Postman, Git, GitHub.
+Full list: HTML, CSS, Tailwind CSS, JavaScript, TypeScript, Python, React, Next.js, Angular, React Query, Redux, Zustand, Node.js, NestJS, Express.js, FastAPI, Django, LangChain, OpenAI, Pinecone, PostgreSQL, MongoDB, Redis, Supabase, Prisma, AWS, Amazon EC2, Amazon Cognito, Amazon Polly, AWS Organizations, Microsoft Azure, Jenkins, Grafana, Metabase, Postman, Git, GitHub.
 
 ## Education
 
@@ -105,19 +127,19 @@ Coursework across Data Structures, Algorithms, OOP, DBMS, Operating Systems and 
 
 ### Availability
 
-Yash is open to full-time Full Stack, Frontend and AI Engineer roles. He is open to relocating anywhere in the world and is equally comfortable working fully remote.
+Yash is open to full-time Full Stack, AI Engineer and Frontend roles. He is open to relocating anywhere in the world and is equally comfortable working fully remote.
 
 ### Working style
 
-Yash prefers owning features end to end — API design, state management and UI — and has consistently been the person who takes a screen from empty file to shipped.
+Yash prefers owning features end to end — data model, API design, state management and UI — and has consistently been the person who takes a screen from empty file to shipped. He has worked as a founding engineer on a product with no existing codebase and as L2 support on a production system with real users queued behind every bug, and treats both as the same job seen from different ends.
 
 ### Interests
 
-Outside of code Yash is a hybrid athlete, splitting training between lifting and endurance work. He is an everyday learner and currently going deep on LLM application integration, LangChain and retrieval-augmented generation.
+Outside of code Yash is a hybrid athlete, splitting training between lifting and endurance work. He is an everyday learner and currently going deep on agentic workflows, LangGraph, retrieval-augmented generation and cloud architecture.
 
 ### This portfolio
 
-This site is built with Vite, React and Tailwind CSS. It ships three things most portfolios do not: a retrieval-augmented terminal that answers questions about Yash from a local knowledge base, an llms.txt endpoint so language-model crawlers can read Yash's profile as structured text, and optional webcam hand-tracking that lets you scroll and click with gestures.
+This site is built with Vite, React and Tailwind CSS. It ships three things most portfolios do not: a retrieval-augmented terminal that answers questions about Yash from a local knowledge base, a plain-text /llms.txt generated from the same data file so language models read curated prose rather than scraped markup, and optional webcam hand-tracking that lets you scroll and click with gestures.
 
 ## Contact
 
@@ -129,4 +151,4 @@ This site is built with Vite, React and Tailwind CSS. It ships three things most
 
 ---
 
-Generated from src/data/profile.js on 2026-08-29. Do not edit by hand.
+Generated from src/data/profile.js on 2026-08-30. Do not edit by hand.
