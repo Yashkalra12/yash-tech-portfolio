@@ -54,7 +54,7 @@ export const commands = {
       bullet(
         experience.flatMap((job) => [
           `${job.role} · ${job.company}`,
-          `  ${job.duration}`,
+          `  ${[job.type, job.duration, job.place].filter(Boolean).join(" · ")}`,
           ...job.highlights.map((h) => `  - ${h}`),
           "",
         ]),
@@ -100,14 +100,6 @@ export const commands = {
     run: () => ({
       type: "links",
       body: [{ label: "Resume", handle: "open in Google Drive", href: identity.resume }],
-    }),
-  },
-
-  llms: {
-    help: "open llms.txt (this site, as plain text for LLMs)",
-    run: () => ({
-      type: "links",
-      body: [{ label: "llms.txt", handle: "/llms.txt", href: "/llms.txt" }],
     }),
   },
 
