@@ -20,7 +20,7 @@ export default function Intro() {
   return (
     <section className="flex flex-col items-center gap-10 pt-10 lg:flex-row lg:items-start lg:gap-6">
       <div className="w-full lg:w-1/2">
-        <h1 className="text-3xl font-bold leading-tight md:text-5xl">
+        <h1 className="font-display text-4xl font-normal leading-tight tracking-tight md:text-6xl">
           <span className="rotating-role" />
           <span className="text-[#006AFF]">.</span>
         </h1>
@@ -54,10 +54,13 @@ export default function Intro() {
                 alt={identity.name}
                 className="h-24 w-24 shrink-0 rounded-full object-cover"
               />
-              <div>
-                <p className="text-xl font-bold">{identity.name}</p>
-                <p className="text-sm text-slate-400">{identity.headline}</p>
-                <p className="mt-1 text-xs text-slate-400">{identity.location}</p>
+              {/* Four lines, in the order you would read them off a badge: who,
+                  what, where it came from, where he is. */}
+              <div className="min-w-0">
+                <p className="font-display text-2xl leading-none">{identity.name}</p>
+                <p className="mt-1.5 text-sm font-semibold text-[#006AFF]">{identity.tagline}</p>
+                <p className="mt-1 text-xs text-slate-400">{identity.headline}</p>
+                <p className="text-xs text-slate-400">{identity.location}</p>
               </div>
             </div>
           </MacWindow>
@@ -88,7 +91,7 @@ export default function Intro() {
               <p className="text-[#27C841]">❯ whoami</p>
               <p className="text-slate-400">{identity.name} — {identity.tagline}</p>
               <p className="text-[#27C841]">❯ skills --top</p>
-              <p className="text-slate-400">React · Node · FastAPI · LangChain · MongoDB</p>
+              <p className="text-slate-400">React · TypeScript · FastAPI · LangGraph · Pinecone</p>
               <p className="text-[#27C841]">❯ open --to hire</p>
               <p className="text-slate-400">{identity.relocation}</p>
               <p className="text-[#27C841]">
