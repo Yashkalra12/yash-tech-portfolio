@@ -9,6 +9,9 @@
  *
  * Flow: round camera button → consent modal → model download progress → gesture
  * cheat sheet, shown once tracking is actually live.
+ *
+ * The button is not positioned here — the page puts it in the top-right cluster
+ * alongside the theme switch, so the two controls stay one group.
  */
 
 import { useEffect, useState } from "react";
@@ -48,25 +51,25 @@ export default function PermissionGate() {
 
   return (
     <>
-      <div className="fixed bottom-5 right-5 z-[9996] flex flex-col items-end gap-2">
-        {isRunning ? (
-          <span className="rounded-full bg-[#27C841] px-3 py-1 text-xs font-bold text-white shadow-lg">
-            hand control on · {mode}
-          </span>
-        ) : null}
+      {/* The live-status pill is hidden on small screens, where there is no room
+          for it beside the header island. */}
+      {isRunning ? (
+        <span className="hidden rounded-full bg-[#27C841] px-3 py-1 text-xs font-bold text-white shadow-lg sm:inline">
+          hand control on · {mode}
+        </span>
+      ) : null}
 
-        <button
-          type="button"
-          onClick={() => (isRunning ? stop() : setOpen(true))}
-          aria-label={isRunning ? "Turn off hand control" : "Control this site with your hand"}
-          title={isRunning ? "Turn off hand control" : "Control this site with your hand"}
-          className={`flex h-14 w-14 items-center justify-center rounded-full text-xl text-white shadow-lg transition hover:scale-105 ${
-            isRunning ? "bg-[#FE5E58]" : "bg-[#006AFF]"
-          }`}
-        >
-          {isRunning ? <FaVideoSlash /> : <FaVideo />}
-        </button>
-      </div>
+      <button
+        type="button"
+        onClick={() => (isRunning ? stop() : setOpen(true))}
+        aria-label={isRunning ? "Turn off hand control" : "Control this site with your hand"}
+        title={isRunning ? "Turn off hand control" : "Control this site with your hand"}
+        className={`flex h-11 w-11 items-center justify-center rounded-full text-base text-white shadow-lg transition hover:scale-105 ${
+          isRunning ? "bg-[#FE5E58]" : "bg-[#006AFF]"
+        }`}
+      >
+        {isRunning ? <FaVideoSlash /> : <FaVideo />}
+      </button>
 
       {open && !isRunning ? (
         <div className="fixed inset-0 z-[9998] flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm">
@@ -181,7 +184,7 @@ export default function PermissionGate() {
 
       {/* Surface a failure that happened outside the modal. */}
       {enabled && status === "error" && !open ? (
-        <div className="fixed bottom-24 right-5 z-[9996] max-w-xs rounded-lg bg-red-50 p-3 text-xs text-red-700 shadow-lg">
+        <div className="fixed right-3 top-20 z-[9996] max-w-xs rounded-lg bg-red-50 p-3 text-xs text-red-700 shadow-lg">
           {error?.message}
         </div>
       ) : null}
