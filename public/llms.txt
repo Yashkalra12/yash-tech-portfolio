@@ -1,6 +1,6 @@
 # Yash Kalra
 
-> Full Stack AI Engineer — CS Grad @ Chitkara · Full Stack + AI
+> Full Stack AI Engineer — CS Grad @ Chitkara
 
 I build AI products end to end. Retrieval pipelines, APIs, and the interfaces on top.
 
