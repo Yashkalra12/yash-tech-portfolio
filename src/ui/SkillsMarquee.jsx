@@ -35,12 +35,23 @@ function Tile({ skill }) {
       className="flex h-[76px] w-[76px] shrink-0 items-center justify-center rounded-2xl border bg-white shadow-sm transition-transform duration-200 hover:-translate-y-1 sm:h-[120px] sm:w-[120px]"
       style={{ borderColor: `${skill.color}33`, backgroundColor: `${skill.color}0F` }}
     >
-      <img
-        src={`/skills/${skill.img}`}
-        alt={skill.title}
-        loading="lazy"
-        className="h-8 w-8 object-contain sm:h-14 sm:w-14"
-      />
+      {skill.img ? (
+        <img
+          src={`/skills/${skill.img}`}
+          alt={skill.title}
+          loading="lazy"
+          className="h-8 w-8 object-contain sm:h-14 sm:w-14"
+        />
+      ) : (
+        // No redistributable mark for this one, so the name is the logo. Balanced
+        // against the image tiles by weight rather than by size.
+        <span
+          className="px-1.5 text-center text-[9px] font-bold uppercase leading-tight tracking-tight sm:text-xs"
+          style={{ color: skill.color }}
+        >
+          {skill.title}
+        </span>
+      )}
     </div>
   );
 }
