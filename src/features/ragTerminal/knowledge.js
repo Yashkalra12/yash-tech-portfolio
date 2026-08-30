@@ -96,7 +96,7 @@ function buildChunks() {
       `experience:${job.id}`,
       "Experience",
       `${job.role} at ${job.company}`,
-      `${identity.firstName} worked as ${job.role} at ${job.company} from ${job.duration}. What he did there: ${job.highlights.join(" ")}`,
+      `${identity.firstName} worked as ${job.role} at ${job.company} (${[job.type, job.place].filter(Boolean).join(", ")}) from ${job.duration}. What he did there: ${job.highlights.join(" ")}`,
       [
         "work",
         "job",
