@@ -13,10 +13,82 @@
   --ink: #101828;
   --pen-red: #f5576c;
   --pen-orange: #ff9f1c;
+
+  /* Theme surfaces. Only these four change between light and dark. */
+  --page: #ffffff;
+  --card: #ffffff;
+  --line: #e2e8f0;
+  --chip: #f1f5f9;
+  --muted: #64748b;
+}
+
+.dark {
+  --ink: #e8eaf0;
+  --page: #0b0d12;
+  --card: #12151c;
+  --line: #232936;
+  --chip: #1a1f2a;
+  --muted: #94a3b8;
+}
+
+.page-shell {
+  background: var(--page);
+  color: var(--ink);
+}
+
+/* --- Dark mode --------------------------------------------------------------
+ * Rather than sprinkle `dark:` variants through every component, dark mode
+ * remaps the handful of surface utilities the design actually uses. Two upsides:
+ * a component added later is themed without being touched, and the palette
+ * stays in one place. The selectors are deliberately blunt — if a component ever
+ * needs a colour that genuinely should not flip, it should use a value that is
+ * not one of these.
+ */
+.dark .bg-white {
+  background-color: var(--card);
+}
+
+.dark .bg-slate-50,
+.dark .bg-slate-50\/70,
+.dark .bg-slate-100 {
+  background-color: var(--chip);
+}
+
+.dark .border-slate-200,
+.dark .border-\[\#ededed\] {
+  border-color: var(--line);
+}
+
+.dark .text-slate-400,
+.dark .text-slate-500,
+.dark .text-slate-600,
+.dark .text-slate-700 {
+  color: var(--muted);
+}
+
+/* The mac window title bar, which is a fixed grey in light mode. */
+.dark .bg-\[\#ededed\] {
+  background-color: #1b1f28;
+}
+
+.dark .bg-\[\#e3e3e3\] {
+  background-color: #262c38;
 }
 
 .font-cartoon {
   font-family: "Nanum Pen Script", cursive;
+}
+
+/* --- Text wrapping ---------------------------------------------------------
+ * `pretty` stops the browser leaving one short word alone on the last line of a
+ * paragraph, which is what was opening gaps in the longer experience bullets.
+ */
+p,
+li,
+h1,
+h2,
+h3 {
+  text-wrap: pretty;
 }
 
 /* --- Rotating job title -----------------------------------------------------
@@ -149,6 +221,18 @@
   box-shadow: 0 3px 10px rgba(0, 106, 255, 0.25);
 }
 
+.dark .btn-ghost {
+  background: var(--card);
+  color: var(--ink);
+  border-color: var(--line);
+}
+
+.dark .btn-primary:hover {
+  background: var(--card);
+  color: var(--ink);
+  border-color: var(--line);
+}
+
 .btn-ghost:hover {
   transform: scale(1.04);
   background: var(--blue);
@@ -207,7 +291,7 @@
 
 /* --- Project cards --------------------------------------------------------- */
 .project-card {
-  border: 2px solid #fff;
+  border: 2px solid var(--card);
   border-radius: 12px;
   overflow: hidden;
   cursor: pointer;
