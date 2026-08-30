@@ -14,14 +14,20 @@ export const identity = {
   // in src/styles/portfolio.css, which is what actually animates the heading.
   roles: ["Everyday Learner", "Full Stack Developer", "AI Engineer", "Hybrid Athlete"],
   headline: "CS Grad @ Chitkara · Full Stack + AI",
-  blurb: "I build AI products end to end — retrieval pipelines, APIs, and the interfaces on top.",
-  about: [
-    "I am a full stack engineer who works across the whole line: the data and retrieval layer, the services in the middle, and the interface a person actually touches. Most of what I build now has a language model somewhere inside it, which means the interesting problems are rarely the model — they are ingestion, grounding, latency and state.",
-    "As a founding engineer at Munshot I built a financial research product from an empty repository: React and TypeScript on the front, FastAPI and NestJS behind it, RAG over PDFs, filings and spreadsheets on Pinecone, and LangGraph agents streaming their answers back token by token. At Genpact I work the other side of the same coin — keeping production BPM workflows healthy on Azure, where a bug has a queue of real users behind it.",
-    "Before that, at Lumio AI, I shipped five production applications for US-based clients and built a validation pipeline that checked thousands of PDFs against ground truth and lifted accuracy by 80%.",
-    "I care about work that ships and stays shipped. Outside the editor I train as a hybrid athlete, which is roughly the same discipline applied to a different system.",
+  // Two lines, rendered as two lines in the hero. Joined with a space wherever the
+  // blurb is needed as prose (the terminal, llms.txt).
+  blurb: [
+    "I build AI products end to end.",
+    "Retrieval pipelines, APIs, and the interfaces on top.",
   ],
-  location: "Lucknow / Chandigarh, India",
+  about: [
+    "I work across the whole stack: the data and retrieval layer, the services in the middle, and the screen someone actually uses. Most of what I build now has a language model in it somewhere, and the hard parts are almost never the model. They are ingestion, grounding, latency and state.",
+    "At Munshot I was the founding engineer on a financial research product and built it from an empty repository. React and TypeScript on the front, FastAPI and NestJS behind it, RAG over PDFs, filings and spreadsheets on Pinecone, and LangGraph agents that stream their answers back as they work.",
+    "At Genpact I keep production BPM workflows running on Azure. Different job, same instinct: read the logs, find the real cause, ship the fix, tell the person who raised it what happened.",
+    "Before that I was at Lumio AI, where I shipped five production apps for US clients and built a validation pipeline that checked thousands of PDFs against ground truth and pushed accuracy up by 80%.",
+    "I like work that ships and then keeps working. Away from the keyboard I train as a hybrid athlete: lifting and endurance, most days of the week.",
+  ],
+  location: "Lucknow, India",
   relocation: "Open to relocate worldwide · Remote ready",
   learning: ["Agentic Workflows", "LangGraph", "Retrieval-Augmented Generation", "Cloud Architecture"],
   offers: ["Web Apps", "Mobile Apps", "AI Solutions", "Cloud Services"],
@@ -152,7 +158,7 @@ export const experience = [
     duration: "Feb 2025 – Aug 2026 · 1 yr 7 mos",
     place: "Singapore · Remote",
     logo: "/assets/munsgot_logo.png",
-    link: "https://www.linkedin.com/company/munshot/about/",
+    link: "https://muns.ai/",
     highlights: [
       "Built a React and TypeScript application for financial research, including streaming chat responses, Plotly charts, PDF/document previews, portfolio views, and spreadsheet-based analysis using Redux Toolkit and TanStack Query.",
       "Developed reusable, accessible UI components with Tailwind CSS, Radix UI, and shadcn/ui; delivered responsive layouts, dark mode, file upload, document search, and export flows for PDF, Excel, PowerPoint, and CSV.",
