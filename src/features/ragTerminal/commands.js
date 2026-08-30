@@ -41,7 +41,7 @@ export const commands = {
         identity.name,
         identity.headline,
         "",
-        identity.blurb,
+        ...identity.blurb,
         "",
         `Location   ${identity.location}`,
         `Status     ${identity.relocation}`,
