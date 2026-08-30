@@ -18,13 +18,12 @@ const ICONS = {
 
 const hrefFor = (id) => socials.find((social) => social.id === id)?.href;
 
-/** The pill at the very bottom. Deliberately short — four ways to leave the page. */
+/** The pill at the very bottom. Deliberately short — three ways to get in touch. */
 const SIGN_OFF = [
-  { label: "LinkedIn", href: hrefFor("linkedin"), dot: true, external: true },
-  { label: "Github", href: hrefFor("github"), dot: true, external: true },
+  { label: "LinkedIn", href: hrefFor("linkedin"), external: true },
+  { label: "Github", href: hrefFor("github"), external: true },
   // mailto: hands off to a mail client, so a new tab would just flash and close.
-  { label: "Email", href: hrefFor("email"), dot: true, external: false },
-  { label: "llms.txt", href: "/llms.txt", dot: false, external: false },
+  { label: "Email", href: hrefFor("email"), external: false },
 ];
 
 export default function Footer() {
@@ -68,12 +67,12 @@ export default function Footer() {
             <a
               key={item.label}
               href={item.href}
-              // llms.txt is on this origin; everything else leaves the site.
+              // Anything that leaves the site opens beside this page, never over it.
               {...(item.external ? { target: "_blank", rel: "noreferrer noopener" } : {})}
               className="island-link"
             >
               {item.label}
-              {item.dot ? <span className="text-[#4d9bff]">.</span> : null}
+              <span className="text-[#4d9bff]">.</span>
             </a>
           ))}
         </nav>
