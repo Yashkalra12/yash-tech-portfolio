@@ -1,8 +1,8 @@
 /**
- * The window chrome that shows up all over the reference design: a rounded card
- * with a grey title bar and three traffic lights. In the original, the red dot
- * genuinely dismisses the card and the green one toggles the size — those stay
- * wired here rather than being decoration.
+ * The window chrome that shows up all over this design: a rounded card with a
+ * grey title bar and three traffic lights. The red dot genuinely dismisses the
+ * card and the green one toggles the size — they are wired up rather than being
+ * decoration, because a control that looks clickable and is not is a small lie.
  */
 
 const DOT = {
