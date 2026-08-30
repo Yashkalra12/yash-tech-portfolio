@@ -5,7 +5,9 @@ import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 
 export default [
-  { ignores: ['dist'] },
+  // public/mediapipe is generated: minified wasm glue copied out of node_modules by
+  // scripts/copy-mediapipe-wasm.mjs, and worth ~1000 lint errors if not excluded.
+  { ignores: ['dist', 'public/mediapipe'] },
   {
     files: ['**/*.{js,jsx}'],
     languageOptions: {
@@ -29,6 +31,9 @@ export default [
       ...react.configs['jsx-runtime'].rules,
       ...reactHooks.configs.recommended.rules,
       'react/jsx-no-target-blank': 'off',
+      // This project documents props with JSDoc rather than the prop-types
+      // package, which is not a dependency — the rule can only report noise.
+      'react/prop-types': 'off',
       'react-refresh/only-export-components': [
         'warn',
         { allowConstantExport: true },

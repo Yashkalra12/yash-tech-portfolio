@@ -1,0 +1,319 @@
+/*
+ * Styles for the rebuilt portfolio.
+ *
+ * The design language: white ground, one strong blue accent, and handwritten
+ * annotations in the margins. Most of the
+ * work is done in Tailwind classes; what lives here is the stuff Tailwind
+ * cannot express — the CSS `content` job-title carousel, the timed reveal of
+ * the intro copy, and the tilt-on-hover mockups.
+ */
+
+:root {
+  --blue: #006aff;
+  --ink: #101828;
+  --pen-red: #f5576c;
+  --pen-orange: #ff9f1c;
+
+  /* Theme surfaces. Only these four change between light and dark. */
+  --page: #ffffff;
+  --card: #ffffff;
+  --line: #e2e8f0;
+  --chip: #f1f5f9;
+  --muted: #64748b;
+}
+
+.dark {
+  --ink: #e8eaf0;
+  --page: #0b0d12;
+  --card: #12151c;
+  --line: #232936;
+  --chip: #1a1f2a;
+  --muted: #94a3b8;
+}
+
+.page-shell {
+  background: var(--page);
+  color: var(--ink);
+}
+
+/* --- Dark mode --------------------------------------------------------------
+ * Rather than sprinkle `dark:` variants through every component, dark mode
+ * remaps the handful of surface utilities the design actually uses. Two upsides:
+ * a component added later is themed without being touched, and the palette
+ * stays in one place. The selectors are deliberately blunt — if a component ever
+ * needs a colour that genuinely should not flip, it should use a value that is
+ * not one of these.
+ */
+.dark .bg-white {
+  background-color: var(--card);
+}
+
+.dark .bg-slate-50,
+.dark .bg-slate-50\/70,
+.dark .bg-slate-100 {
+  background-color: var(--chip);
+}
+
+.dark .border-slate-200,
+.dark .border-\[\#ededed\] {
+  border-color: var(--line);
+}
+
+.dark .text-slate-400,
+.dark .text-slate-500,
+.dark .text-slate-600,
+.dark .text-slate-700 {
+  color: var(--muted);
+}
+
+/* The mac window title bar, which is a fixed grey in light mode. */
+.dark .bg-\[\#ededed\] {
+  background-color: #1b1f28;
+}
+
+.dark .bg-\[\#e3e3e3\] {
+  background-color: #262c38;
+}
+
+.font-cartoon {
+  font-family: "Nanum Pen Script", cursive;
+}
+
+/* --- Text wrapping ---------------------------------------------------------
+ * `pretty` stops the browser leaving one short word alone on the last line of a
+ * paragraph, which is what was opening gaps in the longer experience bullets.
+ */
+p,
+li,
+h1,
+h2,
+h3 {
+  text-wrap: pretty;
+}
+
+/* --- Rotating job title -----------------------------------------------------
+ * The reference animates the `content` of a pseudo-element so the heading
+ * cycles through roles with no JS at all. Kept, with Yash's roles.
+ */
+.rotating-role::after {
+  content: "Everyday Learner";
+  color: var(--blue);
+  animation: roleCycle 12s infinite;
+}
+
+/* Keep these four in step with `identity.roles` in src/data/profile.js — the
+ * data file is what the RAG terminal and llms.txt read, this is what animates. */
+@keyframes roleCycle {
+  0%,
+  23% {
+    content: "Everyday Learner";
+  }
+  25%,
+  48% {
+    content: "Full Stack Developer";
+  }
+  50%,
+  73% {
+    content: "AI Engineer";
+  }
+  75%,
+  98% {
+    content: "Hybrid Athlete";
+  }
+}
+
+/* --- Timed intro reveal -----------------------------------------------------
+ * A speech bubble greets you, then hands over to the real copy. Both halves are
+ * driven by delayed animations rather than state, matching the original.
+ */
+.bubble-in {
+  animation: hideAfter 0s ease-in 2.4s forwards;
+}
+
+@keyframes hideAfter {
+  to {
+    visibility: hidden;
+    height: 0;
+    opacity: 0;
+  }
+}
+
+.reveal-late {
+  visibility: hidden;
+  animation: showAfter 0s ease-in 2.4s forwards;
+}
+
+@keyframes showAfter {
+  to {
+    visibility: visible;
+  }
+}
+
+.fade-up-in {
+  animation: fadeUpIn 0.9s ease-out both;
+}
+
+@keyframes fadeUpIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* --- Hover tilts ------------------------------------------------------------ */
+.tilt-hover {
+  transition: transform 0.9s ease-in-out;
+}
+
+.tilt-hover:hover {
+  transform: rotate(-1deg) scale(1.015);
+}
+
+.tilt-hover-right {
+  transition: transform 0.9s ease-in-out;
+  transform: rotate(2deg);
+}
+
+.tilt-hover-right:hover {
+  transform: rotate(1deg) scale(1.02);
+}
+
+/* --- Buttons ---------------------------------------------------------------
+ * Two variants that swap appearance on hover, as in the reference.
+ */
+.btn-primary,
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  height: 46px;
+  padding: 0 1.5rem;
+  border-radius: 999px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.35s ease;
+}
+
+.btn-primary {
+  background: var(--blue);
+  color: #fff;
+  border: 1px solid var(--blue);
+  box-shadow: 0 3px 5px rgba(0, 106, 255, 0.5);
+}
+
+.btn-primary:hover {
+  transform: scale(1.04);
+  background: #fff;
+  color: #333;
+  border-color: #fff;
+  box-shadow: 0 3px 12px rgba(0, 106, 255, 0.35);
+}
+
+.btn-ghost {
+  background: #fff;
+  color: #333;
+  border: 1px solid #fff;
+  box-shadow: 0 3px 10px rgba(0, 106, 255, 0.25);
+}
+
+.dark .btn-ghost {
+  background: var(--card);
+  color: var(--ink);
+  border-color: var(--line);
+}
+
+.dark .btn-primary:hover {
+  background: var(--card);
+  color: var(--ink);
+  border-color: var(--line);
+}
+
+.btn-ghost:hover {
+  transform: scale(1.04);
+  background: var(--blue);
+  color: #fff;
+  border-color: var(--blue);
+  box-shadow: 0 3px 5px rgba(0, 106, 255, 0.5);
+}
+
+/* --- Nav ------------------------------------------------------------------- */
+/* --- Dynamic island nav ----------------------------------------------------
+ * Links inside the black pill. Sized tight so all five still fit on one line at
+ * 360px wide — wrapping would turn the stadium shape into a blob.
+ */
+.island-link {
+  padding: 0.375rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.75);
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+@media (min-width: 640px) {
+  .island-link {
+    padding: 0.375rem 0.625rem;
+    font-size: 0.875rem;
+  }
+}
+
+.island-link:hover,
+.island-link:focus-visible {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+/* --- Draggable skill cards -------------------------------------------------
+ * Each row picks up its own gradient, so reordering the list visibly shuffles
+ * the colours — which is the whole joke of the "variable skill set" section.
+ */
+.skill-row:nth-child(5n + 1) {
+  background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+}
+.skill-row:nth-child(5n + 2) {
+  background: linear-gradient(135deg, #f5576c 0%, #eebd89 100%);
+}
+.skill-row:nth-child(5n + 3) {
+  background: linear-gradient(135deg, #3beb7b 0%, #3fa1fc 100%);
+}
+.skill-row:nth-child(5n + 4) {
+  background: linear-gradient(135deg, #5ee7df 0%, #7e38e0 100%);
+}
+.skill-row:nth-child(5n + 5) {
+  background: linear-gradient(135deg, #fda085 0%, #f6d365 100%);
+}
+
+/* --- Project cards --------------------------------------------------------- */
+.project-card {
+  border: 2px solid var(--card);
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.45s ease-in-out, box-shadow 0.45s ease;
+}
+
+.project-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 4px 18px rgba(255, 159, 28, 0.55);
+}
+
+/* Respect users who have asked for less motion. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .reveal-late {
+    visibility: visible;
+  }
+}

@@ -2,24 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
-
 html {
-    scroll-behavior: smooth;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Utilities the legacy dark portfolio at /legacy still relies on. */
+@layer utilities {
+  .perspective {
+    perspective: 1000px;
   }
-  @layer utilities {
-    .perspective {
-      perspective: 1000px;
-    }
-    
-    .transform-style-3d {
-      transform-style: preserve-3d;
-    }
-    
-    .backface-hidden {
-      backface-visibility: hidden;
-    }
-    
-    .rotate-y-180 {
-      transform: rotateY(180deg);
-    }
-  }  
+
+  .transform-style-3d {
+    transform-style: preserve-3d;
+  }
+
+  .backface-hidden {
+    backface-visibility: hidden;
+  }
+
+  .rotate-y-180 {
+    transform: rotateY(180deg);
+  }
+}

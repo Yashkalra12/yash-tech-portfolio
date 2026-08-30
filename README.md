@@ -1,49 +1,125 @@
-# yash-tech-portfolio
+# Yash Kalra — Portfolio
 
-**Personal Developer Portfolio for Yash Kalra**
+A portfolio built with Vite, React and Tailwind CSS. The layout and visual
+language are a tribute to
+[AVIVASHISHTA29/Portfolio2021](https://github.com/AVIVASHISHTA29/Portfolio2021):
+white ground, one strong blue accent, "mac window" cards with working traffic
+lights, and handwritten notes in the margins.
 
-A modern, evolving portfolio to showcase my journey, projects, and skills as a software developer passionate about impactful tech and AI.
+On top of that it ships three things most portfolios do not.
 
----
+## 1. RAG terminal
 
-## 🚀 Tech Stack
+`src/features/ragTerminal/` — ask the site anything about me and get an answer
+grounded in a local knowledge base, with the retrieved sources shown underneath.
 
-- **Frontend:** React, Vite, Tailwind CSS
-- **State Management:** Context API (Redux optional)
-- **Linting & Tools:** ESLint, Prettier
-- **Deployment:** Vercel ([yashkalra.site](https://yashkalra.site))
+- **Retrieval is BM25** over ~30 short passages, with a synonym layer so
+  "where does he live" and "is he open to relocating" both land correctly.
+  Synonym-derived terms are down-weighted so a rare word in the question
+  (a company name, say) still wins.
+- **It needs no API key and makes no network call.** The whole index is built at
+  module load from `src/data/profile.js`.
+- **Optional LLM phrasing**: set `VITE_RAG_ENDPOINT` (see `.env.example`) to
+  point at a proxy that holds your key. Retrieval still runs first, so answers
+  stay grounded, and any failure falls back to the local answer.
+- It also works as a shell — `whoami`, `projects`, `skills`, `contact`, `help`.
+  Arrow keys walk back through your history.
 
----
+## 2. llms.txt
 
-## 🛠️ Setup Instructions
+`public/llms.txt` is generated from `src/data/profile.js` by
+`scripts/generate-llms-txt.mjs`, and is also rendered on the page itself so you
+can read exactly what a crawler gets.
 
-Clone and run locally:
+[llms.txt](https://llmstxt.org) is a convention for serving a curated plain-text
+version of a site, so language models read prose you wrote rather than scraped
+markup. Generation is wired into `npm run build`, so the file can never drift
+from the site.
 
 ```bash
-git clone https://github.com/yashk2810/yash-tech-portfolio.git
-cd yash-tech-portfolio
-npm install
-npm run dev
+npm run llms   # regenerate public/llms.txt
 ```
 
----
+## 3. Hand control
 
-## ✨ About
+`src/features/handControl/` — opt in and steer the page with your webcam.
 
-This portfolio is a living journal of my growth as a developer, featuring:
-- End-to-end project showcases
-- AI and modern web integrations
-- Clean, responsive UI/UX
+| Gesture | Action |
+| --- | --- |
+| Open palm, move up/down | Scroll the page |
+| Pinch thumb to index | Click whatever the cursor is over |
+| Fist | Hold still |
 
----
+- Nothing starts until you click through the explainer, and the camera is only
+  requested from that click. Turn it off any time from the corner button.
+- **Video never leaves the device** — frames are processed in-browser by Google's
+  MediaPipe HandLandmarker. Nothing is recorded or uploaded.
+- A small mirrored preview in the bottom-left corner draws the detected hand
+  skeleton, so you can see whether the tracker has actually found your hand.
+- The ~2MB MediaPipe bundle is dynamically imported, so visitors who never turn
+  it on never download it.
 
-## 📫 Contact
+**It needs an HTTPS origin.** `getUserMedia` is only available in a secure
+context, so the camera works on the deployed site and on `localhost`, but *not*
+over plain http on a LAN IP — which is the usual way people try it from a phone.
+Use the deployed URL or a tunnel (`npx localtunnel --port 5173`). The consent
+modal says so up front when the origin is insecure.
 
-- [Portfolio](https://yashkalra.site)
-- [LinkedIn](https://linkedin.com/in/yashkalra)
-- [GitHub](https://github.com/yashk2810)
+**Delegates.** Tracking prefers MediaPipe's GPU delegate but falls back to CPU
+whenever WebGL2 is unavailable (Chrome with hardware acceleration off, several
+mobile browsers) — otherwise the wasm graph dies with
+`emscripten_webgl_create_context() returned error 0`. That failure is often not a
+thrown exception: the graph builds, and inference then returns empty results
+forever. So there is also a watchdog — if the GPU delegate produces no detection
+at all in its first 2.5 seconds, it is rebuilt on CPU. Inference is capped at
+~25fps so the CPU path stays usable on a phone.
 
----
+The preview shows a live readout (`GPU 25fps · tracking` / `· no hand`) so a
+silent failure is never invisible. Append `?handcpu=1` to the URL to force the
+CPU delegate.
 
-MIT License
+**The wasm runtime is served from this origin**, copied out of
+`node_modules/@mediapipe/tasks-vision` into `public/mediapipe/wasm` by
+`scripts/copy-mediapipe-wasm.mjs` (wired into `predev` and `prebuild`, and
+gitignored). Pointing MediaPipe at a CDN version pins the binaries independently
+of the JS glue we import, and a mismatch there is another way to get a graph that
+builds and then detects nothing.
 
+## Running it
+
+```bash
+npm install
+npm run dev      # http://localhost:5173
+npm run build    # regenerates llms.txt, then builds
+npm run lint
+```
+
+## Editing content
+
+**`src/data/profile.js` is the single source of truth.** The UI sections, the RAG
+knowledge base and `llms.txt` are all derived from it — add a job or a project
+there and it shows up in all three, including as something the terminal can
+answer questions about.
+
+## Layout
+
+```
+src/
+  data/profile.js              all content, single source of truth
+  ui/                          the rebuilt UI components
+  Pages/Portfolio.jsx          the page at /
+  features/ragTerminal/        knowledge base, BM25 retriever, terminal UI
+  features/handControl/        MediaPipe tracking, consent gate, cursor
+  styles/portfolio.css         CSS the design needs that Tailwind cannot express
+  Components/, Pages/Home.jsx  the previous dark-themed build, served at /legacy
+scripts/generate-llms-txt.mjs  profile.js -> public/llms.txt
+```
+
+The previous dark portfolio is still live at **`/legacy`** while the new design
+is being iterated on.
+
+## Credits
+
+UI design inspired by [Avi Vashishta's Portfolio2021](https://github.com/AVIVASHISHTA29/Portfolio2021).
+GT Walsheim in the original is a commercial font, so this build substitutes
+Poppins, and keeps Nanum Pen Script for the handwritten notes.

@@ -1,36 +1,34 @@
-import { useState } from 'react'
-import './App.css'
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
-// import { Outlet } from 'react-router-dom'
-import Navbar from './Components/Navbar'
-import Home from './Pages/Home'
+import "./App.css";
+import "./styles/portfolio.css";
+import Portfolio from "./Pages/Portfolio";
+import Navbar from "./Components/Navbar";
+import Home from "./Pages/Home";
 
-
-function App() {
-  const Layout = () => {
+/**
+ * The current portfolio lives at `/`.
+ *
+ * The previous dark-themed portfolio is kept at `/legacy` while the new design
+ * is iterated on — nothing is deleted, so the two can be compared side by side.
+ */
+function LegacyLayout() {
   return (
-    <div className='bg-[#05051b] text-white'>
+    <div className="bg-[#05051b] text-white">
       <Navbar />
       <Outlet />
-      {/* <Footer /> */}
     </div>
-  )
-}
-  const router = createBrowserRouter([
-    {
-      path: "/",
-      element: <Layout />,
-      children: [
-        { path: "/", element: <Home /> },
-      ],
-    },
-  ]);
-  
-  return (
-    <>
-      <RouterProvider router={router} />
-    </>
   );
 }
 
-export default App
+const router = createBrowserRouter([
+  { path: "/", element: <Portfolio /> },
+  {
+    path: "/legacy",
+    element: <LegacyLayout />,
+    children: [{ index: true, element: <Home /> }],
+  },
+]);
+
+export default function App() {
+  return <RouterProvider router={router} />;
+}
