@@ -13,8 +13,11 @@ export default {
         background: "#CBACF9",
       },
       fontFamily: {
-        sans: ["Poppins", "ui-sans-serif", "system-ui", "sans-serif"],
-        poppins: ["Poppins", "sans-serif"],
+        // Inter Tight for everything, Instrument Serif for display headings.
+        sans: ["Inter Tight", "ui-sans-serif", "system-ui", "sans-serif"],
+        display: ["Instrument Serif", "ui-serif", "Georgia", "serif"],
+        // `font-poppins` is still referenced by the legacy portfolio at /legacy.
+        poppins: ["Inter Tight", "sans-serif"],
         spacemono: ["Space Mono", "ui-monospace", "monospace"],
         cartoon: ["Nanum Pen Script", "cursive"],
       },
