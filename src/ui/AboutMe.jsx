@@ -1,10 +1,11 @@
 /**
- * About section: centred prose flanked by a dismissible social card, plus the
- * handwritten "that's me" aside — the reference's AboutMe, with Yash's copy.
+ * About section: the prose, a dismissible GitHub card, and the robot that tilts
+ * its head to match yours once the camera is on.
  */
 
 import { useState } from "react";
 import MacWindow from "./MacWindow";
+import RobotHead from "./RobotHead";
 import SectionHeading from "./SectionHeading";
 import { identity, socials } from "../data/profile";
 
@@ -18,14 +19,7 @@ export default function AboutMe() {
 
       <div className="mt-8 flex flex-col items-center gap-10 lg:flex-row">
         <div className="w-full lg:w-1/3">
-          <img
-            src="/assets/Front.png"
-            alt=""
-            className="tilt-hover mx-auto w-full max-w-xs rounded-2xl object-cover shadow-lg"
-          />
-          <p className="mt-3 text-center font-cartoon text-2xl text-[#f5576c]">
-            ~ Hey, that&apos;s me!
-          </p>
+          <RobotHead />
         </div>
 
         <div className="w-full lg:w-2/3">
