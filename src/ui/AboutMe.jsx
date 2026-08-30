@@ -29,15 +29,21 @@ export default function AboutMe() {
         </div>
 
         <div className="w-full lg:w-2/3">
-          <div className="mx-auto max-w-2xl space-y-4 text-center text-slate-500">
-            {identity.about.map((paragraph) => (
-              <p key={paragraph} className="leading-relaxed">
+          {/* Ranged left, not centred: this is four paragraphs of real prose now,
+              and centred body copy gives every line a different starting point to
+              hunt for. The opening paragraph is set a size up as the lead. */}
+          <div className="max-w-2xl space-y-4 text-slate-600">
+            {identity.about.map((paragraph, index) => (
+              <p
+                key={paragraph}
+                className={index === 0 ? "text-lg leading-relaxed text-slate-700" : "leading-relaxed"}
+              >
                 {paragraph}
               </p>
             ))}
           </div>
 
-          <div className="mt-8 flex flex-wrap justify-center gap-2">
+          <div className="mt-8 flex max-w-2xl flex-wrap gap-2">
             {identity.learning.map((item) => (
               <span
                 key={item}
@@ -58,7 +64,7 @@ export default function AboutMe() {
 
           {showCard ? (
             <MacWindow
-              className="tilt-hover mx-auto mt-8 max-w-md"
+              className="tilt-hover mt-8 max-w-md"
               onClose={() => setShowCard(false)}
             >
               <a
