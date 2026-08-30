@@ -1,8 +1,7 @@
 /**
- * Hero section, following the reference's IntroComponent: a heading whose role
- * cycles via CSS, a speech bubble that hands over to the real copy after a
- * beat, a dismissible "ID card", and a laptop mockup with a handwritten note
- * pointing at it.
+ * Hero section: a heading whose role cycles via CSS, a speech bubble that hands
+ * over to the real copy after a beat, a dismissible "ID card", and a laptop
+ * mockup with a handwritten note pointing at it.
  */
 
 import { useState } from "react";
@@ -81,7 +80,7 @@ export default function Intro() {
         )}
       </div>
 
-      {/* Laptop mockup, with the handwritten aside from the original. */}
+      {/* Laptop mockup, with a handwritten aside pointing at it. */}
       <div className="relative w-full lg:w-1/2">
         <p className="font-cartoon text-2xl text-[#ff9f1c] lg:text-right">
           ~ ask my terminal anything about me, it actually answers
