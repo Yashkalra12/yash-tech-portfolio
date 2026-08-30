@@ -196,7 +196,7 @@ export default function RagTerminal() {
 
   return (
     <section id="terminal" className="mx-auto w-full max-w-4xl scroll-mt-24 px-4 py-16">
-      <h2 className="text-3xl font-bold md:text-4xl">
+      <h2 className="font-display text-4xl font-normal tracking-tight md:text-5xl">
         Ask my portfolio anything <span className="text-[#FEBD2C]">.</span>
       </h2>
       <p className="mt-2 max-w-2xl text-slate-500">
