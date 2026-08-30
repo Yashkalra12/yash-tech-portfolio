@@ -1,186 +1,98 @@
-# Portfolio rebuild — branch `yash_2026Sep`
+# Portfolio rebuild — build notes
 
-Rebuilding the portfolio from scratch, taking UI inspiration from
-[AVIVASHISHTA29/Portfolio2021](https://github.com/AVIVASHISHTA29/Portfolio2021),
-with Yash's own data, plus three original features.
+Notes I kept while rebuilding this portfolio from scratch on `yash_2026Sep`.
+The README is the front door; this is the working log — decisions, the gesture
+spec, and the bugs that cost me the most time.
 
-## Decisions made
+## Decisions
 
-- **Tooling stays Vite + React 18 + Tailwind.** The reference repo is CRA +
-  Material-UI + react-spring; we keep the modern toolchain and reimplement his
-  UI patterns in Tailwind + framer-motion (already a dependency).
-- **Aesthetic follows the reference**: light/white background, blue `#006AFF`
-  accent, "mac window" chrome with red/amber/green traffic lights, ID-card
-  style hero, handwritten cartoon annotations, iframe project previews.
-- **Fonts**: GT Walsheim in the reference is a paid font → use a Google Fonts
-  geometric sans instead, plus `Nanum Pen Script` for the cartoon annotations
-  (that one is the same font the reference uses).
-- **Old UI is preserved** at route `/legacy` so nothing is thrown away while
-  iterating on the new design.
-- **RAG terminal runs fully client-side** (BM25 over a local corpus, no API key
-  required) with optional LLM synthesis if an endpoint is configured.
+- **Vite + React 18 + Tailwind**, framer-motion for motion, gsap for
+  scroll-driven motion. No extra drag or animation libraries.
+- **Look**: white ground, one blue accent (`#006AFF`), mac-window chrome with
+  working traffic lights, an ID-card hero, handwritten notes in the margins,
+  live iframes instead of project screenshots. Dark mode is a remap of the
+  handful of surface utilities the design uses, not a `dark:` variant per
+  component.
+- **`src/data/profile.js` is the single source of truth** — sections, the RAG
+  knowledge base and `llms.txt` all derive from it.
+- **The RAG terminal runs fully client-side**: BM25 over a local corpus, no API
+  key, no network call. An LLM phrasing layer is optional and goes through a
+  proxy — never a `VITE_` key, since those are inlined into the bundle.
+- **My previous dark build stays at `/legacy`** so nothing is thrown away.
+- `src/ui/` rather than `src/components/`, because the latter would collide with
+  the existing `src/Components` on a case-insensitive macOS filesystem.
+- Fonts: Inter Tight, Instrument Serif for display, Space Mono in the terminal,
+  Nanum Pen Script for the margin notes.
 
-## Reference UI patterns being reimplemented
+## Gesture vocabulary
 
-| Reference file | Pattern | Our component |
-| --- | --- | --- |
-| `Header.js` / `DrawerComponent.js` / `MyList.js` | fixed top bar, smooth-scroll nav, mobile drawer | `Header.jsx` |
-| `IntroComponent.js` | rotating job-title via CSS `content` animation, text bubble that self-hides, mac/iphone mockups, ID card | `Intro.jsx`, `MacWindow.jsx` |
-| `AboutMe.js` | centred prose + QR/social ID card, cartoon annotation | `AboutMe.jsx` |
-| `SkillSet.js` + `Viewpager.js` | **draggable, reorderable** skill list ("my skill set is literally variable") | `SkillSet.jsx` + `DraggableList.jsx` (framer-motion `Reorder`) |
-| `Projects.js` + `DialogProjects.js` | grid of screenshot cards → modal with a live `<iframe>` of the site in mac chrome, resizable via the green light | `Projects.jsx`, `ProjectDialog.jsx` |
-| `Footer.js` | name + cartoon sign-off + social icon row | `Footer.jsx` |
-
-Sections the reference lacks but Yash needs: `Experience.jsx`, `Education.jsx`.
-
-## File layout
-
-```
-src/
-  data/profile.js                      # SINGLE SOURCE OF TRUTH for all content
-  features/ragTerminal/
-    knowledge.js                       # builds RAG chunks from profile.js
-    retriever.js                       # BM25 + synonyms, client-side
-    synthesize.js                      # optional LLM grounding layer
-    commands.js                        # terminal slash/word commands
-    RagTerminal.jsx                    # terminal UI (mac window chrome)
-  features/handControl/
-    useHandTracking.js                 # MediaPipe HandLandmarker loop
-    HandControlProvider.jsx            # context + scroll/click driving
-    PermissionGate.jsx                 # explicit opt-in modal before camera
-    HandCursor.jsx                     # on-screen cursor + camera preview
-  components/                          # new Avi-inspired UI
-  styles/portfolio.css
-scripts/generate-llms-txt.mjs          # profile.js -> public/llms.txt
-public/llms.txt                        # generated, committed
-```
-
-## Status
-
-- [x] Branch `yash_2026Sep` created
-- [x] Reference repo studied (cloned to /tmp/Portfolio2021)
-- [x] `@mediapipe/tasks-vision` installed
-- [x] `src/data/profile.js` — all of Yash's data extracted from the old components
-- [x] `src/features/ragTerminal/knowledge.js` — chunk builder
-- [x] `src/features/ragTerminal/retriever.js` — BM25 retriever + local answer
-- [x] `synthesize.js`, `commands.js`, `RagTerminal.jsx`
-- [x] `scripts/generate-llms-txt.mjs` + `public/llms.txt` (wired into `npm run build`)
-- [x] hand-control feature (`useHandTracking`, provider, `context.js`,
-      `PermissionGate`, `HandCursor`)
-- [x] UI components (MacWindow, SectionHeading, Header, Intro, AboutMe,
-      Experience, SkillSet, DraggableList, Projects, ProjectDialog, Education,
-      LlmsSection, Footer)
-- [x] `styles/portfolio.css`, tailwind config, `index.html` fonts
-- [x] wire `App.jsx` (`/` = new page, `/legacy` = old page)
-- [x] verified: `npm run build` passes; MediaPipe lazily code-splits into its
-      own 126 kB chunk; lint clean in all new files (total problems 60 → 30,
-      remainder all pre-existing in `src/Components/`)
-- [x] retriever tested — 15/15 representative questions retrieve the right
-      passage, unknown questions correctly return nothing
-- [x] server-render smoke test — 16/16 content assertions pass
-
-### Prototype is complete and verified. Open for iteration.
-
-Next things worth doing when picking this up again:
-
-- Replace the hero laptop mock-up's fake terminal with a real screenshot, or
-  drop in the `iphoneAnonimo`/`macLw`-style device frames the reference uses.
-- `public/assets/Front.png` is currently reused as the About photo — swap in a
-  proper portrait.
-- Consider a real embedding model for the RAG terminal if the corpus grows past
-  a few hundred passages; BM25 is the right call at this size.
-- Hand control is tuned by four constants at the top of
-  `HandControlProvider.jsx` (`SCROLL_GAIN`, `SCROLL_DEADZONE`, `SMOOTHING`,
-  `CLICK_COOLDOWN_MS`) — worth adjusting on real hardware.
-
-## Handsfree control — ported from `AVIVASHISHTA29/repository-2024`
-
-The live site's handsfree feature is **not** in `Portfolio2021` (that is still the
-old CRA build). It is in **`repository-2024`**, whose
-`src/providers/CameraInputProvider.ts` is the spec. What was ported, and where it
-now lives:
-
-| Reference file | Our file |
-| --- | --- |
-| `CameraInputProvider.ts` (geometry) | `features/handControl/gestures.js` |
-| `CameraInputProvider.ts` (camera + models) | `features/handControl/useVisionTracking.js` |
-| `CameraInputProvider.ts` (gesture state machine) | `features/handControl/HandControlProvider.jsx` |
-| `CameraFeedback.tsx` + `HandCursor.tsx` | `features/handControl/HandCursor.jsx` |
-| `GestureTutorial.tsx` | `features/handControl/GestureTutorial.jsx` |
-| `HorizontalSkills.tsx` + `horizontalSkills.scss` | `ui/SkillsMarquee.jsx` |
-
-Gesture vocabulary, matching the tutorial modal:
+Matches the tutorial modal, and is what `gestures.js` implements:
 
 - **Head tracking** — nose offset from face centre, normalised by face size, ×3,
-  clamped to −1..1. Steers the cursor whenever no hand is in frame.
-- **Open hand** — palm (landmark 9) takes over the cursor.
+  clamped to −1..1. Steers the cursor whenever no hand is in frame. The same
+  landmarks drive the robot head in the About section.
+- **Open hand** — palm (landmark 9) takes the cursor over.
 - **Pinch to click** — thumb-index under `0.05`, released over `0.08`
   (hysteresis), 3 frames of agreement each way, 300ms cooldown.
-- **Pinch & drag to scroll** — a held pinch that travels more than 15px vertically
-  becomes a scroll at 8px per px, inverted (grab and pull), and coasts on release
-  with `velocity *= 0.95` per frame until under 0.5px.
-- **Fist** — hard-cancels, and suppresses pinches for 200ms afterwards.
-
-Two deliberate departures from the reference:
-
-1. Delegate handling. The reference hardcodes `delegate: "GPU"`; we probe WebGL2,
-   catch build failures, and rebuild on CPU if a delegate that built produces no
-   detection within 3s (see bug 10 below).
-2. `SkillsMarquee` animates a transform over a duplicated list rather than
-   animating `scrollLeft` with manual wrap-around, which avoids fighting scroll
-   anchoring and stealing touch gestures on iOS.
+- **Pinch and drag to scroll** — a held pinch that travels more than 15px
+  vertically becomes a scroll at 8px per px, inverted (grab and pull), coasting
+  on release with `velocity *= 0.95` per frame until under 0.5px.
+- **Fist** — hard-cancels, and suppresses pinches for 200ms afterwards, because
+  a hand passes through pinch-like shapes on its way out of a fist.
 
 `gestures.js` is pure geometry — no React, no DOM — and is unit-tested by
-`npm run test:gestures` (26 assertions, including the fist-that-looks-like-a-pinch
-trap and head-pose scale invariance).
+`npm run test:gestures` (26 assertions, including the fist-that-looks-like-a-
+pinch trap and head-pose scale invariance).
 
-## Bugs found and fixed during the build
+Tuning lives in four constants at the top of `HandControlProvider.jsx`:
+`SCROLL_GAIN`, `SCROLL_DEADZONE`, `SMOOTHING`, `CLICK_COOLDOWN_MS`. Worth
+adjusting on real hardware rather than by reasoning.
+
+## Bugs found and fixed
 
 1. `Reorder.Values` does not exist in framer-motion; the API is `Reorder.Group`.
 2. The retriever returned nothing for "who is yash": every word in that question
-   is a stopword, so the query was empty after filtering. Synonym lookup now runs
-   against the *unfiltered* tokens, since question words like "who" and "where"
-   carry intent.
+   is a stopword, so the query was empty after filtering. Synonym lookup now
+   runs against the *unfiltered* tokens, since "who" and "where" carry intent.
 3. Synonym-expanded terms scored the same as typed ones, so "what did he do at
    Lumio AI?" ranked the AI/LLM skills passage above the Lumio job. Synonyms are
    now weighted at 0.4.
 4. The absolute `minScore` floor of 0.6 discarded valid matches whose only shared
    term was common; lowered to 0.12, leaning on the relative band instead.
-5. `src/components` would have collided with the existing `src/Components` on
-   case-insensitive macOS filesystems — new UI went to `src/ui/` instead.
-6. Hand control never started for real users: the delegate was hardcoded to
+5. Hand control never started for real visitors: the delegate was hardcoded to
    `"GPU"`, and without a WebGL context the wasm graph fails with
-   `emscripten_webgl_create_context() returned error 0` / `kGpuService ... was
-   not provided`. Now WebGL2 is probed up front, GPU creation is wrapped in a
-   try/catch, and a delegate that builds but then fails every frame is rebuilt on
-   CPU after 12 consecutive bad frames.
-7. Camera start was fragile on phones: fixed `640x480` constraints could throw
+   `emscripten_webgl_create_context() returned error 0`. WebGL2 is now probed up
+   front, GPU creation is wrapped in a try/catch, and a delegate that builds but
+   then fails every frame is rebuilt on CPU after 12 consecutive bad frames.
+6. Camera start was fragile on phones: fixed `640x480` constraints could throw
    `OverconstrainedError`, and iOS Safari can reject `play()` before
-   `loadedmetadata`. Constraints are now `ideal`, and metadata is awaited.
-8. Nothing told the visitor that `getUserMedia` needs a secure context — the
+   `loadedmetadata`. Constraints are `ideal` now, and metadata is awaited.
+7. Nothing told the visitor that `getUserMedia` needs a secure context — the
    single biggest reason it "doesn't work on my phone". Both the hook and the
-   consent modal now say so explicitly.
-9. The cursor position was React state written on every gesture frame, so the
-   whole page subtree re-rendered up to 60×/sec. It is a ref now; `HandCursor`
-   paints the cursor and the skeleton from one animation frame loop.
-10. Camera opened but nothing was ever detected. Two causes, both of which fail
-    *silently* — the graph builds, then `detectForVideo` returns empty results
-    forever, so counting thrown errors never helped:
-    - The wasm runtime was loaded from the `0.10.14` CDN while the installed
-      package was `0.10.35`. It is now copied out of `node_modules` into
-      `public/mediapipe/wasm` at build time, so the versions cannot drift.
-    - A GPU delegate that passes the WebGL2 probe can still fail inside wasm.
-      There is now a watchdog: no detection within 2.5s of starting means the
-      landmarker is rebuilt on CPU.
-    Detection confidences also dropped from 0.5 to 0.3 — the defaults reject a
-    lot of real hands in ordinary webcam lighting — and the preview grew a live
-    fps/tracking readout so this class of failure is visible next time.
+   consent modal say so explicitly now.
+8. The cursor position was React state written on every gesture frame, so the
+   whole subtree re-rendered up to 60×/sec. It is a ref now, and `HandCursor`
+   paints the cursor and the skeleton from one animation-frame loop.
+9. Camera opened but nothing was ever detected. Two causes, both of which fail
+   *silently* — the graph builds, then `detectForVideo` returns empty results
+   forever, so counting thrown errors never helped:
+   - The wasm runtime was loaded from the `0.10.14` CDN while the installed
+     package was `0.10.35`. It is copied out of `node_modules` into
+     `public/mediapipe/wasm` at build time now, so the versions cannot drift.
+   - A GPU delegate that passes the WebGL2 probe can still fail inside wasm.
+     There is a watchdog: no detection within 2.5s of starting rebuilds the
+     landmarker on CPU.
 
-## Data captured in profile.js
+   Detection confidences also dropped from 0.5 to 0.3 — the defaults reject a lot
+   of real hands in ordinary webcam lighting — and the preview grew a live
+   fps/tracking readout so this class of failure is visible next time.
+10. The skills marquee travelled a full list length per viewport of scroll, which
+    read as a blur. It travels 14% now, with `scrub: 2`.
 
-- **Experience**: Munshot PTE Ltd (Full Stack Dev, Feb 2025 – Jan 2026);
-  Lumio AI (SWE, Sep 2024 – Feb 2025)
-- **Projects**: GigNest, eVoting Platform, HealthSync
-- **Education**: Chitkara University B.E. CSE 9.26 CGPA (2021–2025);
-  City International School 91.6%; La Martiniere College 94.6%
-- **Socials**: LinkedIn, GitHub, LeetCode, Gmail, WhatsApp
+## Still worth doing
+
+- Swap the hero laptop's mock terminal for a real screenshot or a device frame.
+- Consider a real embedding model for the terminal if the corpus grows past a few
+  hundred passages; BM25 is the right call at this size.
+- Verify the serif headings, the robot's proportions and dark-mode contrast on
+  the handwritten notes on real devices, not just in a build.
