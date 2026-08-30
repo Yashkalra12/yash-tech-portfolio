@@ -51,6 +51,8 @@ identity.about.forEach(p);
 h(2, "Experience");
 experience.forEach((job) => {
   h(3, `${job.role} — ${job.company} (${job.duration})`);
+  const meta = [job.type, job.place].filter(Boolean);
+  if (meta.length) p(meta.join(" · "));
   li(job.highlights);
   p(`More about the company: ${job.link}`);
 });
