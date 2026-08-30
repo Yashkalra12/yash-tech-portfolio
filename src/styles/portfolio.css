@@ -92,8 +92,9 @@ h3 {
 }
 
 /* --- Rotating job title -----------------------------------------------------
- * The reference animates the `content` of a pseudo-element so the heading
- * cycles through roles with no JS at all. Kept, with Yash's roles.
+ * Animating the `content` of a pseudo-element cycles the heading through my
+ * roles with no JS at all. The cost is that the strings live here as well as in
+ * `identity.roles` — keep the two in step.
  */
 .rotating-role::after {
   content: "Everyday Learner";
@@ -124,7 +125,7 @@ h3 {
 
 /* --- Timed intro reveal -----------------------------------------------------
  * A speech bubble greets you, then hands over to the real copy. Both halves are
- * driven by delayed animations rather than state, matching the original.
+ * driven by delayed animations rather than state, so no timers run in React.
  */
 .bubble-in {
   animation: hideAfter 0s ease-in 2.4s forwards;
@@ -183,7 +184,7 @@ h3 {
 }
 
 /* --- Buttons ---------------------------------------------------------------
- * Two variants that swap appearance on hover, as in the reference.
+ * Two variants that swap appearance on hover: solid becomes outlined and back.
  */
 .btn-primary,
 .btn-ghost {
