@@ -1,11 +1,10 @@
 /**
- * The reference's Viewpager: a list of skill cards you can drag to reorder,
- * because "my skill set is literally variable" is the joke of that section.
+ * A list of skill cards you can drag to reorder, because "my skill set is
+ * literally variable" is the joke of that section.
  *
- * The original used react-spring + react-use-gesture + lodash-move. framer-motion
- * is already a dependency here and ships `Reorder`, which does the same job with
- * far less code — and, unlike the original, each row is also reorderable from
- * the keyboard with the arrow keys.
+ * framer-motion is already a dependency here and ships `Reorder`, so this needs
+ * no extra drag library. Each row is also reorderable from the keyboard with the
+ * arrow keys, so the joke is not mouse-only.
  */
 
 import { Reorder, useDragControls } from "framer-motion";
