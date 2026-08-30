@@ -1,6 +1,6 @@
 /**
  * Screenshot grid of projects. Clicking one opens the live site in a modal
- * (ProjectDialog), which is how the reference presents its work.
+ * (ProjectDialog) rather than navigating away from the page.
  */
 
 import { useState } from "react";
