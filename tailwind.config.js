@@ -1,6 +1,9 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  // The toggle puts `.dark` on <html>; most of the theming is the surface remap
+  // in src/styles/portfolio.css, and `dark:` is for the exceptions.
+  darkMode: "class",
   theme: {
     extend: {
       rotate: {
