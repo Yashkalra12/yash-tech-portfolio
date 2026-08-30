@@ -1,7 +1,7 @@
 /**
- * The reference's DialogProjects: clicking a project opens it in mac window
- * chrome with the *live site* in an iframe, the red light closes it and the
- * green light toggles between wide and narrow. Rebuilt without Material-UI.
+ * Clicking a project opens it in mac window chrome with the *live site* in an
+ * iframe: the red light closes it, the green light toggles between wide and
+ * narrow. A screenshot says a project exists; the running thing says it works.
  */
 
 import { useEffect, useState } from "react";
