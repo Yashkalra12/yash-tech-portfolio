@@ -54,7 +54,7 @@ const DETECT_INTERVAL_MS = 33;
 const PROBE_MS = 3000;
 /** Failing frames in a row before we assume the delegate throws on everything. */
 const MAX_FRAME_ERRORS = 12;
-/** Track two hands, as the reference does — either can drive a gesture. */
+/** Track two hands — either one can drive a gesture, so neither is favoured. */
 const MAX_HANDS = 2;
 
 /**
